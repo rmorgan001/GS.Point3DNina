@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4.0
+
+- The 3D viewer of a panel that NINA has replaced is now freed, instead of staying alive until NINA closes.
+- NINA's plugin manager now links to this changelog, and each release's notes are taken from it.
+- Every build is now also compiled against the oldest supported NINA version (3.3.0.1060).
+- README: Save view and the options that apply while the panel is hidden are described as they now work.
+
 ## 1.0.3.0
 
 - Fixed the coordinate labels (RA, Dec, Az, Alt, LHA, LST) being too dark to read.
