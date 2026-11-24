@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.9.0
+
+- The plugin manager's description is brought up to date: the compass click faces the pole, and the polling time, tooltips and mount suggestions are described.
+- The plugin now has tags (3D, Mount, Telescope, Visualization, Panel) so it is easier to find.
+- The README now has installation steps, including installing by hand from a release, and how to list a release in NINA's plugin manager.
+
 ## 1.0.8.0
 
 - A saved view with numbers that can't be used (a missing or zero zoom distance, or values that aren't finite) is no longer kept or loaded; the default view applies instead.
