@@ -40,6 +40,17 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 - Windows
 - NINA 3.3.0.1060 or later
 
+## Installation
+
+Once GS.Point3DNina is listed in NINA's plugin manager, open **Plugins** in NINA, find GS.Point3DNina and install it, then restart NINA.
+
+Until it appears there, install it by hand:
+
+1. Download `GS.Point3DNina.<version>.zip` from the [latest release](https://github.com/rmorgan001/GS.Point3DNina/releases/latest).
+2. Close NINA.
+3. Extract the zip into `%LocalAppData%\NINA\Plugins\3.0.0\GS.Point3DNina`, so that `GS.Point3DNina.dll` and the `Assets` folder sit directly inside it. If you are updating, replace what is there.
+4. Start NINA. The plugin and its version show under **Plugins**.
+
 ## Usage
 
 1. Open NINA's **Imaging** tab and add the **3D Model** panel from the panel list.
@@ -104,6 +115,17 @@ Normal builds never deploy. A local deploy takes its version from the newest ent
 This builds, tests and packages without uploading. The ZIP and manifest are written to `artifacts/release`. Versions have four numeric components, each from 0 to 65534. Do not include NINA assemblies in the package.
 
 Pushing a tag such as `v1.0.1.0` runs the Release workflow, which builds, tests, packages and publishes the release. The tag becomes the plugin version.
+
+### List a release in NINA's plugin manager
+
+A release is offered in NINA's plugin manager once its manifest is accepted into [isbeorn/nina.plugin.manifests](https://github.com/isbeorn/nina.plugin.manifests). The release workflow already attaches the manifest (`GS.Point3DNina.<version>.manifest.json`) to each GitHub release, next to the zip it points at.
+
+1. Fork the manifests repository.
+2. Copy the release's manifest into your fork under `manifests/g/GS.Point3DNina/3.0.0/`, named `manifest.<version>.json`. Follow the layout of the existing entries, and use the file from the release as it is: the checksum in it is for that exact zip, so do not rebuild or edit it.
+3. In the fork, run `npm install` and then `node gather.js`. The log should show the manifest as valid.
+4. Open a pull request. Be ready to answer review comments.
+
+The repository expects an open-source licence (this plugin is GPL-3.0) and an accountable human maintainer, and it asks that any material use of AI in the code is disclosed. For a beta, add `"Channel": "Beta"` to the manifest; users then need the beta repository URL in NINA (Options, General, Plugin Repositories).
 
 See the [NINA plugin developer handbook](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/README.md) for [publishing](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/publishing.md) and [testing and debugging](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/testing-and-debugging.md).
 
