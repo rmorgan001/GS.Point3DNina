@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0.0
+
+- The first release to list in NINA's plugin manager. It includes every change from the 1.0.x versions below, which have been withdrawn as separate releases.
+
 ## 1.0.11.0
 
 - The plugin listing in NINA's plugin manager now shows a screenshot of the 3D Model panel.
