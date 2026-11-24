@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5.0
+
+- Fixed a harmless "the 3D viewer could not start (E_ABORT)" error that 1.0.4.0 wrote to NINA's log at startup.
+- More unit tests, covering the model file choice, pose, offsets and assembled-model logic.
+
 ## 1.0.4.0
 
 - The 3D viewer of a panel that NINA has replaced is now freed, instead of staying alive until NINA closes.
