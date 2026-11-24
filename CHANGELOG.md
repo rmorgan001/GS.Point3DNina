@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.11.0
+
+- The plugin listing in NINA's plugin manager now shows a screenshot of the 3D Model panel.
+
 ## 1.0.10.0
 
 - Fixed tooltips on the options page that were on the wrong row from Theme down (for example Background showed the colour text and Polling time showed the RA offset text), and added the missing ones on RA offset and Dec offset.
