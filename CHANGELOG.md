@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.8.0
+
+- A saved view with numbers that can't be used (a missing or zero zoom distance, or values that aren't finite) is no longer kept or loaded; the default view applies instead.
+- Settings read from the file are kept in range: RA and Dec offsets within -90 to 90, a polling time that is Match NINA or 3 to 10 whole seconds, and a `#rrggbb` colour. Anything else returns to its default.
+- A model the viewer cannot load is now reported in NINA's log.
+- Connecting or disconnecting the mount now shows in the model and coordinates at once, even with a slower polling time.
+- The model is no longer reloaded when the mount reports its latitude with tiny differences from one poll to the next.
+- Choosing a mount now keeps a support or telescope you changed yourself, instead of replacing them.
+- The local hour angle chip now shows in the same style as RA and local sidereal time.
+- Fixed the Mount type and Background tooltips.
+- Options are saved a moment after the last change instead of on every change, and shutting down no longer waits on the UI thread.
+- Removed unused code left over from the web app.
+- A local deploy now reports the version of the newest changelog entry, and clears `Assets` files that a newer build no longer ships.
+
 ## 1.0.7.0
 
 - Every option on the plugin's settings page now has a tooltip explaining what it does.

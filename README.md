@@ -21,7 +21,7 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 
 - **Follows your mount.** The model turns with the RA and Dec axes of a German equatorial mount. It uses the mount's site latitude, so pier tilt and compass match your location in either hemisphere.
 - **Build your rig from parts.**
-  - *Mount:* Sky-Watcher EQ6-R Pro, HEQ5 Pro, EQ8-R Pro, CQ350 Pro, EQM-35 Pro and Wave 150i Pro, ZWO AM5, iOptron CEM40 and CEM70.
+  - *Mount:* Sky-Watcher EQ6-R Pro, HEQ5 Pro, EQ8-R Pro, CQ350 Pro, EQM-35 Pro and Wave 150i Pro, ZWO AM5, iOptron CEM40 and CEM70. Choosing a mount also picks the support and telescope that usually go with it, unless you have already changed those yourself.
   - *Support:* a tripod or pier in several sizes.
   - *Telescope:* refractor, reflector, Schmidt-Cassegrain, Ritchey-Chretien (solid or truss), Newtonian or Maksutov-Cassegrain, scaled from 50% to 200% of the mount's own size.
 - **Ready-made models.** Turn the assembled model off to use simpler telescope models, including Alt-Az and polar (fork) mounts as well as German polar. The assembled model is always drawn as a German equatorial mount, so turn it off for an Alt-Az or fork mount.
@@ -32,6 +32,7 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 - **Save and reset the view.** Orbit, zoom and pan to the angle you like, then use Save view on the Options page to keep it for next time. Reset view returns to it, and Use default goes back to the standard view.
 - **Polling time.** How often the model follows the mount. The default, Match NINA, follows every report NINA makes (its Device polling interval). Choose a slower time (3 to 10 seconds, in steps of 1) to update the model less often; it can never be faster than NINA's own interval. The model glides across the whole time, so it still moves smoothly.
 - **Fine adjustment.** RA and Dec offsets of up to 90 degrees line the model up with how your own mount is set up.
+- **Tooltips.** Hover over any option on the Options page to see what it does.
 - **Remembered settings.** Changes made on the Options page show in the 3D Model panel straight away, even while you are on another NINA tab, and persist between sessions.
 
 ## Requirements
@@ -43,13 +44,21 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 
 1. Open NINA's **Imaging** tab and add the **3D Model** panel from the panel list.
 2. Connect your telescope under **Equipment, Mount**. The status line under the model shows which mount is connected.
-3. Open **Options, Plugins**, select GS.Point3DNina, and choose the mount, support, telescope, colour and background you like.
+3. Open **Options, Plugins**, select GS.Point3DNina, and choose the mount, support, telescope, colour and background you like. Hover over an option for a description.
 
 With no telescope connected the model sits in its home position, so you can set up the look before you head out.
 
+### Where settings are kept
+
+Your options are saved in `%LocalAppData%\NINA\Plugins\GS.Point3DNina\settings.json`. If you edit it by hand, a value that no option offers is replaced by its default and the rest is kept: offsets are limited to -90 to 90, the polling time must be Match NINA or 3 to 10 whole seconds, a colour must be `#rrggbb`, and a saved view that can't be used is dropped so the default view applies. Delete the file to go back to the defaults.
+
+### Troubleshooting
+
+If the 3D Model panel stays empty, look in NINA's log for lines starting `GS.Point3DNina`. A model file that cannot be loaded, and a viewer that cannot start, are reported there.
+
 ### Smooth movement and lag
 
-NINA reports the mount's position once per **Device polling interval** (Options, General). The model glides from one reported position to the next over about one and a half polling intervals, so it moves smoothly but trails the real mount by about one interval. For a closer match, lower the polling interval in NINA. To follow the mount less often than NINA reports it, set the plugin's Polling time option to a slower time. The glide length follows the setting each time the panel is shown, so after changing it just switch to the Imaging tab again.
+NINA reports the mount's position once per **Device polling interval** (Options, General). The model glides from one reported position to the next over about one and a half polling intervals, so it moves smoothly but trails the real mount by about one interval. For a closer match, lower the polling interval in NINA. To follow the mount less often than NINA reports it, set the plugin's Polling time option to a slower time. The glide length follows the setting each time the panel is shown, so after changing it just switch to the Imaging tab again. Connecting or disconnecting the mount always shows at once, whatever the polling time.
 
 ## Development
 
@@ -74,7 +83,7 @@ Tests cover metadata, composition and selected feature behaviour. WPF tests run 
 2. Close NINA.
 3. Run the `DeployPlugin` target on the project under `src`.
 
-Normal builds never deploy.
+Normal builds never deploy. A local deploy takes its version from the newest entry in `CHANGELOG.md` (a release takes it from its tag), and removes files under the plugin's `Assets` folder that the new build no longer ships.
 
 ### Project layout
 
