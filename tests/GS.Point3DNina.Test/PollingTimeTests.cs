@@ -31,10 +31,17 @@ namespace GS.Point3DNina.Test {
             => Assert.That(Point3DDockable.IsDue(since, 5, 2), Is.EqualTo(due));
 
         [Test]
+        public void TheChoicesAreMatchNinaThenThreeToTenSecondsInSteps() {
+            var times = Point3DOptions.Instance.PollingTimes;
+            Assert.That(times.Select(t => t.Value), Is.EqualTo(new double[] { 0, 3, 4, 5, 6, 7, 8, 9, 10 }));
+            Assert.That(times[0].Name, Is.EqualTo("Match NINA"));
+        }
+
+        [Test]
         public void TheGlideSpansTheSlowerInterval() {
-            // NINA at 2 s: a 5 s polling time glides 7.5 s; a 1 minute one is capped at 10 s.
+            // NINA at 2 s: a 5 s polling time glides 7.5 s; a 10 s one is capped at 10 s.
             Assert.That(Point3DDockable.GlideMs(Point3DDockable.EffectiveIntervalSeconds(5, 2)), Is.EqualTo(7500));
-            Assert.That(Point3DDockable.GlideMs(Point3DDockable.EffectiveIntervalSeconds(60, 2)), Is.EqualTo(10000));
+            Assert.That(Point3DDockable.GlideMs(Point3DDockable.EffectiveIntervalSeconds(10, 2)), Is.EqualTo(10000));
         }
     }
 }

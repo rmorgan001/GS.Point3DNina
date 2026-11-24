@@ -53,9 +53,8 @@ namespace GS.Point3DNina {
         public IReadOnlyList<SceneBackground> Backgrounds { get; } = ModelAppearance.Backgrounds;
         public IReadOnlyList<ModelColorPreset> Colors { get; } = ModelAppearance.ColorPresets;
         /// <summary>The polling times offered: 0 matches NINA, the others are slower than it.</summary>
-        public IReadOnlyList<Choice<double>> PollingTimes { get; } = [
-            new(0, "Match NINA"), new(3, "3 seconds"), new(5, "5 seconds"), new(10, "10 seconds"),
-            new(15, "15 seconds"), new(30, "30 seconds"), new(60, "1 minute")];
+        public IReadOnlyList<Choice<double>> PollingTimes { get; } =
+            [new(0, "Match NINA"), .. Enumerable.Range(3, 8).Select(s => new Choice<double>(s, $"{s} seconds"))];
         public IReadOnlyList<ViewerTheme> Themes { get; } = [.. Enum.GetValues<ViewerTheme>()];
         public IReadOnlyList<CardinalSize> CardinalSizes { get; } = [.. Enum.GetValues<CardinalSize>()];
         public IReadOnlyList<PolarMode> PolarModes { get; } = [.. Enum.GetValues<PolarMode>()];
