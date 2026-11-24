@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.10.0
+
+- Fixed tooltips on the options page that were on the wrong row from Theme down (for example Background showed the colour text and Polling time showed the RA offset text), and added the missing ones on RA offset and Dec offset.
+- A test now checks that every option's tooltip is on its own row.
+
 ## 1.0.9.0
 
 - The plugin manager's description is brought up to date: the compass click faces the pole, and the polling time, tooltips and mount suggestions are described.

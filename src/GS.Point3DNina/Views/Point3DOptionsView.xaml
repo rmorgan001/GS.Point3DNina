@@ -133,7 +133,7 @@
         </Grid>
 
         <Grid Style="{StaticResource Row}"
-              ToolTip="The picture behind the model in the 3D Model panel: a nebula or galaxy photo, a generated star field, or a plain dark sky.">
+              ToolTip="Dark, Day, Dusk (amber only) or Night (red only, to keep your eyes dark adapted).">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -142,7 +142,7 @@
                       ToolTip="Dark, Day, Dusk (amber only) or Night (red only, to keep your eyes dark adapted)." />
         </Grid>
         <Grid Style="{StaticResource Row}"
-              ToolTip="The colour of the model. Hover a swatch for its name and click it to use it.">
+              ToolTip="The picture behind the model in the 3D Model panel: a nebula or galaxy photo, a generated star field, or a plain dark sky.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -151,7 +151,7 @@
                       SelectedValuePath="Key" DisplayMemberPath="Name" SelectedValue="{Binding BackgroundKey}" />
         </Grid>
         <Grid Style="{StaticResource Row}"
-              ToolTip="How large the N E S W letters are drawn. Needs N E S W switched on.">
+              ToolTip="The colour of the model. Hover a swatch for its name and click it to use it.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -170,7 +170,7 @@
             </ItemsControl>
         </Grid>
         <Grid Style="{StaticResource Row}"
-              ToolTip="Save, reset or forget the camera view used when the 3D Model panel opens.">
+              ToolTip="How large the N E S W letters are drawn. Needs N E S W switched on.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -179,7 +179,7 @@
                       IsEnabled="{Binding ShowCardinals}" />
         </Grid>
         <Grid Style="{StaticResource Row}"
-              ToolTip="Turn the model about its RA axis by this many degrees, to line it up with your real mount. 0 draws it as GSServer does.">
+              ToolTip="How often the model follows the mount. Match NINA uses NINA's Device polling interval (Options, General). A slower time updates the model less often; it can't be faster than NINA's interval.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -188,7 +188,7 @@
                       ToolTip="How often the model follows the mount. Match NINA uses NINA's Device polling interval (Options, General). A slower time updates the model less often; it can't be faster than NINA's interval." />
         </Grid>
         <Grid Style="{StaticResource Row}"
-              ToolTip="Turn the model about its Dec axis by this many degrees, to line it up with your real mount. 0 draws it as GSServer does.">
+              ToolTip="Save, reset or forget the camera view used when the 3D Model panel opens.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -203,14 +203,16 @@
                         ToolTip="Forget the saved view and go back to the default one." />
             </WrapPanel>
         </Grid>
-        <Grid Style="{StaticResource Row}">
+        <Grid Style="{StaticResource Row}"
+              ToolTip="Turn the model about its RA axis by this many degrees, to line it up with your real mount. 0 draws it as GSServer does.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Text="RA offset °" Style="{StaticResource Label}" />
             <ComboBox Grid.Column="1" ItemsSource="{Binding Offsets}" SelectedItem="{Binding RaOffset}" />
         </Grid>
-        <Grid Style="{StaticResource Row}">
+        <Grid Style="{StaticResource Row}"
+              ToolTip="Turn the model about its Dec axis by this many degrees, to line it up with your real mount. 0 draws it as GSServer does.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
