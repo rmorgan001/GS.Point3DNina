@@ -15,6 +15,7 @@
 - The model's glide length now follows NINA's Device polling interval each time the panel is shown, so a restart is no longer needed after changing it.
 - Clicking the compass heading now turns the view to face south instead of north when the mount's latitude is south, matching the pole its polar axis points to. It is set at startup and follows a latitude change.
 - New "Polling time" option: Match NINA (the default) or a slower time (3 to 10 s in 1 s steps), for following the mount less often than NINA polls it. The glide spans the chosen time.
+- The 3D view is now drawn as soon as the Imaging tab is shown, instead of staying blank until clicked.
 - Removed the unused `OptionsOpen` setting and `recentre` command.
 - The build and release workflows now use GitHub Actions versions that run on Node.js 24 (the Node.js 20 deprecation warning is gone).
 

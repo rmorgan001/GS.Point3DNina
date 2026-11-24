@@ -140,6 +140,12 @@ namespace GS.Point3DNina.Test {
         }
 
         [Test]
+        public void TheViewerDrawsAgainWhenItBecomesVisible() {
+            var html = File.ReadAllText(Path.Combine(AssetsDirectory, "viewer.html"));
+            Assert.That(html, Does.Contain("visibilitychange"), "a hidden page doesn't draw, so it must when shown");
+        }
+
+        [Test]
         public void ThemeDefaultsToDark() => Assert.That(new ViewerSettings().Theme, Is.EqualTo(ViewerTheme.Dark));
 
         [Test]

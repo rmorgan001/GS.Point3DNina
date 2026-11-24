@@ -29,6 +29,7 @@ namespace GS.Point3DNina.Views {
         public Point3DView() {
             InitializeComponent();
             Loaded += OnLoaded;
+            IsVisibleChanged += (_, _) => { if (IsVisible && created) Send(new { cmd = "refresh" }); };
             Unloaded += OnUnloaded;
         }
 

@@ -148,6 +148,9 @@
     getCamera: async () => post({ event: 'camera', view: await m.getCamera(viewer) }),
   };
 
+  // A page that was hidden (NINA's Imaging tab not showing yet) has not been drawing: draw as soon as it is shown.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) viewer?.resize(); });
+
   window.chrome.webview.addEventListener('message', e => {
     const a = e.data;
     queue = queue.then(async () => {
