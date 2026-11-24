@@ -8,7 +8,8 @@
   /* The palette model3d.js reads its scene colours from (the web app's dark theme). */
   :root {
     --sky: #070b0e; --panel: #10181c; --panel-raised: #172226; --well: #0a1114;
-    --line: #22313a; --moon: #e8e6df; --green: #52b788; --red: #ef6461;
+    --line: #22313a; --line-strong: #2f4552; --moon: #e8e6df; --mare: #9aa5a8;
+    --green: #52b788; --yellow: #f2c84b; --red: #ef6461;
   }
   /* The other themes: only the variables change, so the page and the scene follow (the same palettes as Green Swamp's apps). */
   :root[data-theme="day"] {
@@ -132,6 +133,8 @@
         box.append(chip);
       }
     },
+    // Sizes the canvas again and asks for a frame (a view that was hidden has not been drawing).
+    refresh: () => viewer.resize(),
     setHeading: a => {
       const button = document.getElementById('heading');
       button.hidden = !a.visible;

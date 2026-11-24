@@ -14,6 +14,11 @@ namespace GS.Point3DNina.Views {
         private const string Host = "gs-point3d.invalid";
         private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
+        // The view that is listening to the options. The panel is unloaded while another NINA tab (such as the options
+        // page, where the settings are changed) is showing, but its WebView lives on and must keep following the
+        // options, so a view stays subscribed when unloaded; only a newer view takes over from it.
+        private static Point3DView active;
+
         private Point3DDockable vm;
         private bool created;    // the scene exists, so commands can follow
         private string loadedModelKey;
@@ -27,11 +32,18 @@ namespace GS.Point3DNina.Views {
         private async void OnLoaded(object sender, RoutedEventArgs e) {
             vm = DataContext as Point3DDockable;
             if (vm == null) return;
+            if (active != null && active != this) active.Detach();
+            active = this;
             vm.Changed -= OnChanged;
             vm.Changed += OnChanged;
             vm.Options.SaveViewRequested -= OnSaveView;
             vm.Options.SaveViewRequested += OnSaveView;
-            if (Web.CoreWebView2 != null) return; // already running: the panel was only moved
+            if (Web.CoreWebView2 != null) {
+                // Already running: the panel was only moved or shown again. Bring the scene up to date with anything
+                // that changed meanwhile and draw it (a hidden WebView doesn't render).
+                if (created) SendAll();
+                return;
+            }
             try {
                 var data = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "NINA", "Plugins", "GS.Point3DNina", "WebView2");
@@ -51,6 +63,10 @@ namespace GS.Point3DNina.Views {
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e) {
+            // Stay subscribed: see "active". A view that is replaced detaches itself then.
+        }
+
+        private void Detach() {
             if (vm == null) return;
             vm.Changed -= OnChanged;
             vm.Options.SaveViewRequested -= OnSaveView;
@@ -58,7 +74,25 @@ namespace GS.Point3DNina.Views {
 
         private void Send(object message) {
             if (Web.CoreWebView2 == null) return;
-            Web.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, Json));
+            try {
+                Web.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, Json));
+            } catch (Exception ex) when (ex is ObjectDisposedException or InvalidOperationException or System.Runtime.InteropServices.COMException) {
+                NINA.Core.Utility.Logger.Warning($"GS.Point3DNina: a message to the 3D viewer was not delivered: {ex.Message}");
+            }
+        }
+
+        /// <summary>Sends every option and the mount's state to the viewer, then has it draw a frame.</summary>
+        private void SendAll() {
+            Send(new { cmd = "setTheme", theme = vm.Theme.ToString().ToLowerInvariant() });
+            Send(new { cmd = "setModelColor", hex = vm.Color });
+            Send(new { cmd = "setBackground", background = vm.Background });
+            Send(new { cmd = "setGrid", visible = vm.ShowGrid });
+            Send(new { cmd = "setCardinals", visible = vm.ShowCardinals });
+            Send(new { cmd = "setCardinalSize", size = vm.CardinalSize.ToString().ToLowerInvariant() });
+            Send(new { cmd = "setHeading", visible = vm.ShowHeading });
+            SendCoordinates();
+            LoadModel();
+            Send(new { cmd = "refresh" });
         }
 
         private void OnMessage(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
@@ -142,7 +176,10 @@ namespace GS.Point3DNina.Views {
                     case ViewerChange.Color: Send(new { cmd = "setModelColor", hex = vm.Color }); break;
                     case ViewerChange.Background: Send(new { cmd = "setBackground", background = vm.Background }); break;
                     case ViewerChange.Grid: Send(new { cmd = "setGrid", visible = vm.ShowGrid }); break;
-                    case ViewerChange.Theme: Send(new { cmd = "setTheme", theme = vm.Theme.ToString().ToLowerInvariant() }); break;
+                    case ViewerChange.Theme:
+                        Send(new { cmd = "setTheme", theme = vm.Theme.ToString().ToLowerInvariant() });
+                        Send(new { cmd = "refresh" });
+                        break;
                     case ViewerChange.Heading: Send(new { cmd = "setHeading", visible = vm.ShowHeading }); break;
                     case ViewerChange.Cardinals:
                         Send(new { cmd = "setCardinals", visible = vm.ShowCardinals });

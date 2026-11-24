@@ -115,6 +115,31 @@ namespace GS.Point3DNina.Test {
         public void NoSavedViewMeansTheDefaultView() => Assert.That(new ViewerSettings().Camera, Is.Null);
 
         [Test]
+        public void EveryColourVariableTheViewerPageUsesIsDefinedForTheDefaultTheme() {
+            // A variable missing from the base :root leaves that colour unset, so text such as the coordinate labels
+            // falls back to a near-black default on the dark scene.
+            var html = File.ReadAllText(Path.Combine(AssetsDirectory, "viewer.html"));
+            var root = Regex.Match(html, @":root\s*\{([^}]*)\}").Groups[1].Value;
+            var defined = Regex.Matches(root, @"(--[a-z-]+)\s*:").Select(m => m.Groups[1].Value).ToHashSet();
+            var used = Regex.Matches(html, @"var\((--[a-z-]+)\)").Select(m => m.Groups[1].Value).Distinct();
+            Assert.That(used.Where(v => !defined.Contains(v)), Is.Empty, "used but not defined in the base :root");
+            foreach (var theme in new[] { "day", "dusk", "night" }) {
+                var block = Regex.Match(html, @":root\[data-theme=""" + theme + @"""\]\s*\{([^}]*)\}").Groups[1].Value;
+                var themed = Regex.Matches(block, @"(--[a-z-]+)\s*:").Select(m => m.Groups[1].Value).ToHashSet();
+                Assert.That(defined.Where(v => !themed.Contains(v)), Is.Empty, $"{theme} leaves these at the dark theme's value");
+            }
+        }
+
+        [Test]
+        public void ViewerPageCanRedrawAfterBeingHidden() {
+            var html = File.ReadAllText(Path.Combine(AssetsDirectory, "viewer.html"));
+            Assert.Multiple(() => {
+                Assert.That(html, Does.Contain("refresh: () => viewer.resize()"), "the command the panel sends when shown again");
+                Assert.That(ViewerScript, Does.Contain("    resize() {"), "the viewer method it calls");
+            });
+        }
+
+        [Test]
         public void ThemeDefaultsToDark() => Assert.That(new ViewerSettings().Theme, Is.EqualTo(ViewerTheme.Dark));
 
         [Test]
