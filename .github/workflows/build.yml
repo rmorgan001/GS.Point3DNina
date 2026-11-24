@@ -27,3 +27,14 @@ jobs:
 
       - name: Test
         run: dotnet test GS.Point3DNina.slnx -c Release --no-build --no-restore
+
+      # The plugin is built against the newest NINA package, but Plugin.props promises it works from MinimumNinaVersion.
+      # Compiling against that version catches use of an API added since. Raise MinimumNinaVersion if this fails.
+      - name: Build against the minimum NINA version
+        shell: pwsh
+        run: |
+          $project = 'src/GS.Point3DNina/GS.Point3DNina.csproj'
+          $min = (dotnet msbuild $project -getProperty:MinimumNinaVersion).Trim()
+          if ($LASTEXITCODE -or !$min) { throw 'Could not read MinimumNinaVersion.' }
+          dotnet build $project -c Release "-p:NinaPackageVersion=$min-nightly" -o "$env:RUNNER_TEMP/min-nina"
+          if ($LASTEXITCODE) { throw "The plugin does not build against NINA $min. Raise MinimumNinaVersion in Plugin.props." }

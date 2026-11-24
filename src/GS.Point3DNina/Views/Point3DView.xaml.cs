@@ -32,7 +32,7 @@ namespace GS.Point3DNina.Views {
         private async void OnLoaded(object sender, RoutedEventArgs e) {
             vm = DataContext as Point3DDockable;
             if (vm == null) return;
-            if (active != null && active != this) active.Detach();
+            if (active != null && active != this) active.Retire();
             active = this;
             vm.Changed -= OnChanged;
             vm.Changed += OnChanged;
@@ -70,6 +70,22 @@ namespace GS.Point3DNina.Views {
             if (vm == null) return;
             vm.Changed -= OnChanged;
             vm.Options.SaveViewRequested -= OnSaveView;
+        }
+
+        /// <summary>
+        /// Called on a view that a newer one has replaced: stops following the options and frees its WebView (and so its
+        /// browser process), which would otherwise live as long as the plugin.
+        /// </summary>
+        private void Retire() {
+            Detach();
+            created = false;
+            loadedModelKey = null;
+            try {
+                if (Web.CoreWebView2 != null) Web.CoreWebView2.WebMessageReceived -= OnMessage;
+                Web.Dispose();
+            } catch (Exception ex) {
+                NINA.Core.Utility.Logger.Warning($"GS.Point3DNina: the old 3D viewer could not be freed: {ex.Message}");
+            }
         }
 
         private void Send(object message) {

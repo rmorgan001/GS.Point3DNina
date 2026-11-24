@@ -37,7 +37,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $files = Get-ChildItem artifacts/release -File | ForEach-Object FullName
-          gh release create '${{ github.ref_name }}' @files --repo '${{ github.repository }}' --title '${{ github.ref_name }}' --generate-notes --verify-tag
+          # The notes are this version's CHANGELOG.md entry; a tag with no entry falls back to generated notes.
+          $notesFile = Join-Path $env:RUNNER_TEMP 'release-notes.md'
+          ./build/Get-ReleaseNotes.ps1 -Tag '${{ github.ref_name }}' -Path $notesFile
+          $notes = if (Test-Path -LiteralPath $notesFile) { @('--notes-file', $notesFile) } else { @('--generate-notes') }
+          gh release create '${{ github.ref_name }}' @files --repo '${{ github.repository }}' --title '${{ github.ref_name }}' @notes --verify-tag
           if ($LASTEXITCODE) { throw "gh release create failed with exit code $LASTEXITCODE." }
 
       - name: Keep the build output

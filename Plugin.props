@@ -60,7 +60,7 @@ GS.Point3DNina is free software, released under the [GNU General Public License 
     <MinimumNinaVersion>3.3.0.1060</MinimumNinaVersion>
     <PluginLicense>GPL-3.0</PluginLicense>
     <PluginLicenseUrl>https://www.gnu.org/licenses/gpl-3.0.html</PluginLicenseUrl>
-    <PluginChangelogUrl></PluginChangelogUrl>
+    <PluginChangelogUrl>https://github.com/rmorgan001/GS.Point3DNina/blob/main/CHANGELOG.md</PluginChangelogUrl>
     <PluginFeaturedImageUrl>https://raw.githubusercontent.com/rmorgan001/GS.Point3DNina/main/assets/icon.png</PluginFeaturedImageUrl>
     <PluginScreenshotUrl></PluginScreenshotUrl>
     <PluginAltScreenshotUrl></PluginAltScreenshotUrl>
