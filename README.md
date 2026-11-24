@@ -29,9 +29,9 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 - **Colour themes.** Dark, Day, Dusk or Night. Dusk is amber only and Night is red only, so the view keeps your eyes dark adapted at the telescope.
 - **Compass heading.** An optional readout in the corner of the view with a needle pointing north and the bearing the camera faces. Click it to turn the view to face north. It is off by default.
 - **Coordinates.** Chips along the top of the view show the mount's RA, Dec, Az, Alt, local hour angle and local sidereal time. Choose which ones show, and double-click RA to switch between hours and degrees.
-- **Save and reset the view.** Orbit, zoom and pan to the angle you like, then use Save view to keep it for next time. Reset view returns to it, and Use default goes back to the standard view.
+- **Save and reset the view.** Orbit, zoom and pan to the angle you like, then use Save view on the Options page to keep it for next time. Reset view returns to it, and Use default goes back to the standard view.
 - **Fine adjustment.** RA and Dec offsets of up to 90 degrees line the model up with how your own mount is set up.
-- **Remembered settings.** Changes show in the panel straight away and persist between sessions.
+- **Remembered settings.** Changes made on the Options page show in the 3D Model panel straight away, even while you are on another NINA tab, and persist between sessions.
 
 ## Requirements
 
