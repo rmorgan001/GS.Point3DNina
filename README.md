@@ -32,3 +32,7 @@ This builds, tests and packages without uploading. ZIP and manifest files go to 
 ## Learn more
 
 Read the [NINA plugin developer handbook](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/README.md), particularly [publishing](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/publishing.md), [testing/debugging](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/testing-and-debugging.md) and [adding examples later](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/getting-started.md#add-another-example-later).
+
+## License
+
+GS.Point3DNina is free software, released under the [GNU General Public License v3.0](LICENSE.txt). It is part of [Green Swamp Software](http://www.greenswamp.org/).

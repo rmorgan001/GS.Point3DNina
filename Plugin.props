@@ -15,7 +15,7 @@
     <PluginLongDescription>
 > ### **Visit Green Swamp Software: [http://www.greenswamp.org/](http://www.greenswamp.org/)**
 
-[![Green Swamp Software](http://www.greenswamp.org/images/moon.jpg)](http://www.greenswamp.org/)
+[![Green Swamp Software](https://raw.githubusercontent.com/rmorgan001/GS.Point3DNina/main/assets/moon-half.jpg)](http://www.greenswamp.org/)
 
 # GS.Point3DNina
 
@@ -45,15 +45,19 @@ With no telescope connected the model sits in its home position, so you can set 
 ## More from Green Swamp
 
 Green Swamp Software makes astronomy tools for telescope owners, including GS Server and the Point3D 3D mount views. Visit [www.greenswamp.org](http://www.greenswamp.org/) for downloads, guides and screenshots.
+
+## License
+
+GS.Point3DNina is free software, released under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). You may use, study, share and change it under the terms of that license. The source code is at [github.com/rmorgan001/GS.Point3DNina](https://github.com/rmorgan001/GS.Point3DNina).
 </PluginLongDescription>
     <RepositoryUrl>https://github.com/rmorgan001/GS.Point3DNina</RepositoryUrl>
     <PluginHomepage>http://www.greenswamp.org/</PluginHomepage>
     <PluginTags></PluginTags>
     <MinimumNinaVersion>3.3.0.1060</MinimumNinaVersion>
-    <PluginLicense>MPL-2.0</PluginLicense>
-    <PluginLicenseUrl>https://www.mozilla.org/en-US/MPL/2.0/</PluginLicenseUrl>
+    <PluginLicense>GPL-3.0</PluginLicense>
+    <PluginLicenseUrl>https://www.gnu.org/licenses/gpl-3.0.html</PluginLicenseUrl>
     <PluginChangelogUrl></PluginChangelogUrl>
-    <PluginFeaturedImageUrl></PluginFeaturedImageUrl>
+    <PluginFeaturedImageUrl>https://raw.githubusercontent.com/rmorgan001/GS.Point3DNina/main/assets/icon.png</PluginFeaturedImageUrl>
     <PluginScreenshotUrl></PluginScreenshotUrl>
     <PluginAltScreenshotUrl></PluginAltScreenshotUrl>
   </PropertyGroup>
