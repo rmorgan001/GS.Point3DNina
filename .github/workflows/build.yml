@@ -1,0 +1,29 @@
+name: Build
+
+# Builds and tests every push to main and every pull request, so a broken change shows up before a release tag.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore GS.Point3DNina.slnx
+
+      - name: Build
+        run: dotnet build GS.Point3DNina.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test GS.Point3DNina.slnx -c Release --no-build --no-restore
