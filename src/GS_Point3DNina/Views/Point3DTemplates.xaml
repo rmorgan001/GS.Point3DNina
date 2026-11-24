@@ -1,0 +1,14 @@
+<ResourceDictionary x:Class="GS.Point3DNina.Views.Point3DTemplates"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:GS.Point3DNina"
+                    xmlns:views="clr-namespace:GS.Point3DNina.Views">
+    <DataTemplate DataType="{x:Type local:Point3DDockable}">
+        <views:Point3DView />
+    </DataTemplate>
+
+    <!-- NINA's plugin settings page shows the template named "{plugin name}_Options", with the plugin as its DataContext. -->
+    <DataTemplate x:Key="GS.Point3DNina_Options">
+        <views:Point3DOptionsView DataContext="{Binding Options}" />
+    </DataTemplate>
+</ResourceDictionary>

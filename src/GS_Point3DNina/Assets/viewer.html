@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GS.Point3D</title>
+<style>
+  /* The palette model3d.js reads its scene colours from (the web app's dark theme). */
+  :root {
+    --sky: #070b0e; --panel: #10181c; --panel-raised: #172226; --well: #0a1114;
+    --line: #22313a; --moon: #e8e6df; --green: #52b788; --red: #ef6461;
+  }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--well); }
+  canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
+  #msg { position: absolute; left: 8px; bottom: 8px; color: var(--red); font: 12px Segoe UI, sans-serif; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="msg"></div>
+<script type="module">
+  import * as m from './model3d/model3d.js';
+
+  const post = o => window.chrome.webview.postMessage(o);
+  let viewer = null;
+  let queue = Promise.resolve();
+
+  // The host sends { cmd, ...args }; commands run in order, because create and loadModel are asynchronous.
+  const commands = {
+    create: async a => { viewer = await m.create(document.getElementById('c'), a.options); post({ event: 'created' }); },
+    loadModel: async a => {
+      const result = await m.loadModel(viewer, a.url, a.mount);
+      post({ event: 'modelLoaded', result: String(result ?? '') });
+    },
+    setPose: a => m.setPose(viewer, a.x, a.y, a.z, a.yCentre),
+    setCamera: a => m.setCamera(viewer, a.view),
+    recentre: a => m.recentre(viewer, a.mount),
+    setModelColor: a => m.setModelColor(viewer, a.hex),
+    setBackground: a => m.setBackground(viewer, a.background),
+    setGrid: a => m.setGrid(viewer, a.visible),
+    setCardinals: a => m.setCardinals(viewer, a.visible),
+    setCardinalSize: a => m.setCardinalSize(viewer, a.size),
+    setHemisphere: a => m.setHemisphere(viewer, a.northern),
+    getCamera: async () => post({ event: 'camera', view: await m.getCamera(viewer) }),
+  };
+
+  window.chrome.webview.addEventListener('message', e => {
+    const a = e.data;
+    queue = queue.then(async () => {
+      if (!viewer && a.cmd !== 'create') return;
+      await commands[a.cmd]?.(a);
+    }).catch(err => {
+      document.getElementById('msg').textContent = String(err?.message ?? err);
+      post({ event: 'error', message: String(err?.message ?? err) });
+    });
+  });
+  post({ event: 'ready' });
+</script>
+</body>
+</html>

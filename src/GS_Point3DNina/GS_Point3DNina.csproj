@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../Plugin.props" />
+  <PropertyGroup>
+    <RootNamespace>GS.Point3DNina</RootNamespace>
+    <AssemblyName>GS_Point3DNina</AssemblyName>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NINA.Plugin" Version="$(NinaPackageVersion)" />
+    <!-- NINA ships its own WebView2 assemblies (this version): compile against them, do not carry a second copy. -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" ExcludeAssets="runtime" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The 3D viewer page, script, models and pictures (from GS.Point3DWeb wwwroot/model3d). -->
+    <None Include="Assets\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="../../build/Plugin.targets" />
+</Project>

@@ -1,0 +1,17 @@
+<UserControl x:Class="GS.Point3DNina.Views.Point3DView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             MinHeight="200" MinWidth="240">
+    <!-- One model fills the panel. Its options are on the plugin's settings page (Options > Plugins). -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <wv2:WebView2 x:Name="Web" Grid.Row="0" DefaultBackgroundColor="#0a1114" />
+
+        <TextBlock Grid.Row="1" Margin="4,4,4,0" Text="{Binding StatusText}" TextTrimming="CharacterEllipsis" />
+    </Grid>
+</UserControl>

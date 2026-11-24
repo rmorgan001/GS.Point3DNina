@@ -1,0 +1,75 @@
+<Project>
+  <!-- This is the single editable source of plugin identity and manifest metadata. -->
+  <PropertyGroup>
+    <PluginId>F885D3AF-B157-431C-A621-4E0595842D52</PluginId>
+    <Version Condition="'$(Version)' == ''">1.0.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <Title>GS.Point3DNina</Title>
+    <AssemblyTitle>$(Title)</AssemblyTitle>
+    <Product>$(Title)</Product>
+    <Copyright>Rob Morgan</Copyright>
+    <Company>Rob Morgan</Company>
+    <Authors>Rob Morgan</Authors>
+    <Description>A live 3D view of your telescope mount inside NINA, from Green Swamp Software.</Description>
+    <PluginLongDescription>
+> ### **Visit Green Swamp Software: [http://www.greenswamp.org/](http://www.greenswamp.org/)**
+
+[![Green Swamp Software](http://www.greenswamp.org/images/moon.jpg)](http://www.greenswamp.org/)
+
+# GS.Point3DNina
+
+**A live 3D view of your telescope mount, right inside NINA.**
+
+GS.Point3DNina adds a **3D Model** panel to NINA's Imaging tab. It draws your telescope, its mount and its support in a real-time 3D scene, and it moves the model as NINA reports where your mount is pointing, so you can see at a glance what the mount is doing, which side of the pier it is on, and whether the tube is about to swing into the tripod.
+
+The 3D scene is the same viewer used by [Green Swamp Software](http://www.greenswamp.org/)'s Point3D for GS Server, brought into NINA as a dockable panel.
+
+## What you get
+
+- **A live model that follows your mount.** Connect a telescope in NINA and the model turns with the RA and Dec axes of a German equatorial mount. It uses the mount's own site latitude, so the pier tilt and the compass match where you are, in the northern or the southern hemisphere.
+- **An assembled model.** Build your rig from parts: choose the mount (Sky-Watcher EQ6-R Pro, HEQ5 Pro, EQ8-R Pro, CQ350 Pro, EQM-35 Pro and Wave 150i Pro, ZWO AM5, iOptron CEM40 and CEM70), a tripod or pier in several sizes, and the telescope it carries: refractor, reflector, Schmidt-Cassegrain, Ritchey-Chretien (solid or truss), Newtonian or Maksutov-Cassegrain. The OTA can be scaled from 50 percent to 200 percent of the mount's own size.
+- **Ready-made models.** Turn the assembled model off to use the simpler telescope models, with Alt-Az and polar (fork) mounts as well as German polar.
+- **Your look.** Pick the model colour, a background (nebulae and galaxies, a generated star field or a plain dark sky), a ground grid, and the N E S W letters in four sizes.
+- **Fine adjustment.** RA and Dec offsets of up to 90 degrees let you line the model up with how your own mount is set up.
+- **Nothing to configure in a hurry.** Every option is on this page, under **Options, Plugins**. Changes show in the panel straight away and are remembered between sessions.
+
+## Using it
+
+1. Open NINA's **Imaging** tab and add the **3D Model** panel from the panel list.
+2. Connect your telescope under **Equipment, Mount**. The status line under the model shows which mount is connected.
+3. Open **Options, Plugins**, select GS.Point3DNina and choose the mount, support, telescope, colour and background you like.
+
+With no telescope connected the model sits in its home position, so you can set up the look before you head out.
+
+## More from Green Swamp
+
+Green Swamp Software makes astronomy tools for telescope owners, including GS Server and the Point3D 3D mount views. Visit [www.greenswamp.org](http://www.greenswamp.org/) for downloads, guides and screenshots.
+</PluginLongDescription>
+    <RepositoryUrl>https://github.com/rmorgan001/GS.Point3DNina</RepositoryUrl>
+    <PluginHomepage>http://www.greenswamp.org/</PluginHomepage>
+    <PluginTags></PluginTags>
+    <MinimumNinaVersion>3.3.0.1060</MinimumNinaVersion>
+    <PluginLicense>MPL-2.0</PluginLicense>
+    <PluginLicenseUrl>https://www.mozilla.org/en-US/MPL/2.0/</PluginLicenseUrl>
+    <PluginChangelogUrl></PluginChangelogUrl>
+    <PluginFeaturedImageUrl></PluginFeaturedImageUrl>
+    <PluginScreenshotUrl></PluginScreenshotUrl>
+    <PluginAltScreenshotUrl></PluginAltScreenshotUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.InteropServices.GuidAttribute"><_Parameter1>$(PluginId)</_Parameter1></AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute"><_Parameter1>false</_Parameter1></AssemblyAttribute>
+    <AssemblyMetadata Include="MinimumApplicationVersion" Value="$(MinimumNinaVersion)" />
+    <AssemblyMetadata Include="License" Value="$(PluginLicense)" />
+    <AssemblyMetadata Include="LicenseURL" Value="$(PluginLicenseUrl)" />
+    <AssemblyMetadata Include="Repository" Value="$(RepositoryUrl)" />
+    <AssemblyMetadata Include="Homepage" Value="$(PluginHomepage)" />
+    <AssemblyMetadata Include="Tags" Value="$(PluginTags)" />
+    <AssemblyMetadata Include="LongDescription" Value="$(PluginLongDescription)" />
+    <AssemblyMetadata Include="ChangelogURL" Value="$(PluginChangelogUrl)" />
+    <AssemblyMetadata Include="FeaturedImageURL" Value="$(PluginFeaturedImageUrl)" />
+    <AssemblyMetadata Include="ScreenshotURL" Value="$(PluginScreenshotUrl)" />
+    <AssemblyMetadata Include="AltScreenshotURL" Value="$(PluginAltScreenshotUrl)" />
+  </ItemGroup>
+</Project>
