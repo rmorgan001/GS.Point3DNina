@@ -17,6 +17,12 @@ GS.Point3DNina adds a **3D Model** panel to NINA's Imaging tab. It draws your te
 
 The scene is the same viewer used by Green Swamp Software's Point3D for GS Server, brought into NINA as a dockable panel.
 
+<div align="center">
+
+![The 3D Model panel in NINA](assets/screenshot-3d-model.jpg)
+
+</div>
+
 ## Features
 
 - **Follows your mount.** The model turns with the RA and Dec axes of a German equatorial mount. It uses the mount's site latitude, so pier tilt and compass match your location in either hemisphere.
