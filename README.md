@@ -26,6 +26,8 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
   - *Telescope:* refractor, reflector, Schmidt-Cassegrain, Ritchey-Chretien (solid or truss), Newtonian or Maksutov-Cassegrain, scaled from 50% to 200% of the mount's own size.
 - **Ready-made models.** Turn the assembled model off to use simpler telescope models, including Alt-Az and polar (fork) mounts as well as German polar.
 - **Your look.** Choose the model colour, a background (nebulae and galaxies, a generated star field, or a plain dark sky), a ground grid, and N/E/S/W letters in four sizes.
+- **Colour themes.** Dark, Day, Dusk or Night. Dusk is amber only and Night is red only, so the view keeps your eyes dark adapted at the telescope.
+- **Compass heading.** An optional readout in the corner of the view with a needle pointing north and the bearing the camera faces. Click it to turn the view to face north. It is off by default.
 - **Fine adjustment.** RA and Dec offsets of up to 90 degrees line the model up with how your own mount is set up.
 - **Remembered settings.** Changes show in the panel straight away and persist between sessions.
 
