@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3.0
+
+- Fixed the coordinate labels (RA, Dec, Az, Alt, LHA, LST) being too dark to read.
+- Fixed options changed on the Options page (theme, colour, background, coordinates and the rest) not showing in the 3D Model panel straight away, and Save view not working while the panel was hidden.
+
 ## 1.0.2.0
 
 - Colour themes: Dark, Day, Dusk (amber only) and Night (red only).
