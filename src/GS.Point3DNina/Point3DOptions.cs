@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace GS.Point3DNina {
 
     /// <summary>What changed, so the view updates only that part of the scene.</summary>
-    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals }
+    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading }
 
     /// <summary>One entry of the alignment mode list.</summary>
     public record ModeChoice(AlignmentModes? Mode, string Name);
@@ -127,6 +127,10 @@ namespace GS.Point3DNina {
         public bool ShowCardinals {
             get => Settings.ShowCardinals;
             set { Settings.ShowCardinals = value; Apply(ViewerChange.Cardinals, nameof(ShowCardinals)); }
+        }
+        public bool ShowHeading {
+            get => Settings.ShowHeading;
+            set { Settings.ShowHeading = value; Apply(ViewerChange.Heading, nameof(ShowHeading)); }
         }
         public CardinalSize CardinalSize {
             get => Settings.CardinalSize;

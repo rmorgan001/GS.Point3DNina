@@ -23,6 +23,8 @@ public sealed class ViewerSettings
     public string Background { get; set; } = ModelAppearance.DefaultBackground;
     public bool ShowGrid { get; set; } = true;
     public bool ShowCardinals { get; set; } = true;
+    /// <summary>The compass readout over the scene: a needle pointing north and the bearing the camera faces. Click it to face north.</summary>
+    public bool ShowHeading { get; set; }
     public CardinalSize CardinalSize { get; set; } = CardinalSize.Medium;
     public int RaOffset { get; set; }
     public int DecOffset { get; set; }

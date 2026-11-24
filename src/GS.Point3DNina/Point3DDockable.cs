@@ -142,6 +142,7 @@ namespace GS.Point3DNina {
         public string Color => Settings.Color;
         public bool ShowGrid => Settings.ShowGrid;
         public bool ShowCardinals => Settings.ShowCardinals;
+        public bool ShowHeading => Settings.ShowHeading;
         public CardinalSize CardinalSize => Settings.CardinalSize;
 
         /// <summary>The viewer's background: an image path, { generated } for the star field, or null for a plain sky.</summary>
