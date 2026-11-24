@@ -24,7 +24,7 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
   - *Mount:* Sky-Watcher EQ6-R Pro, HEQ5 Pro, EQ8-R Pro, CQ350 Pro, EQM-35 Pro and Wave 150i Pro, ZWO AM5, iOptron CEM40 and CEM70.
   - *Support:* a tripod or pier in several sizes.
   - *Telescope:* refractor, reflector, Schmidt-Cassegrain, Ritchey-Chretien (solid or truss), Newtonian or Maksutov-Cassegrain, scaled from 50% to 200% of the mount's own size.
-- **Ready-made models.** Turn the assembled model off to use simpler telescope models, including Alt-Az and polar (fork) mounts as well as German polar.
+- **Ready-made models.** Turn the assembled model off to use simpler telescope models, including Alt-Az and polar (fork) mounts as well as German polar. The assembled model is always drawn as a German equatorial mount, so turn it off for an Alt-Az or fork mount.
 - **Your look.** Choose the model colour, a background (nebulae and galaxies, a generated star field, or a plain dark sky), a ground grid, and N/E/S/W letters in four sizes.
 - **Colour themes.** Dark, Day, Dusk or Night. Dusk is amber only and Night is red only, so the view keeps your eyes dark adapted at the telescope.
 - **Compass heading.** An optional readout in the corner of the view with a needle pointing north and the bearing the camera faces. Click it to turn the view to face north. It is off by default.
@@ -45,6 +45,10 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 3. Open **Options, Plugins**, select GS.Point3DNina, and choose the mount, support, telescope, colour and background you like.
 
 With no telescope connected the model sits in its home position, so you can set up the look before you head out.
+
+### Smooth movement and lag
+
+NINA reports the mount's position once per **Device polling interval** (Options, General). The model glides from one reported position to the next over about one and a half polling intervals, so it moves smoothly but trails the real mount by about one interval. For a closer match, lower the polling interval in NINA. The glide length is read when the panel starts, so restart NINA after changing it.
 
 ## Development
 

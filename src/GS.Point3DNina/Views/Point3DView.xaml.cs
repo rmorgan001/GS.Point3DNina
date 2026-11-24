@@ -117,7 +117,16 @@ namespace GS.Point3DNina.Views {
         }
 
         private void OnMessage(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
-            using var doc = JsonDocument.Parse(e.WebMessageAsJson);
+            // An event handler on the UI thread: an exception here would reach NINA, so a bad message is only logged.
+            try {
+                HandleMessage(e.WebMessageAsJson);
+            } catch (Exception ex) {
+                NINA.Core.Utility.Logger.Warning($"GS.Point3DNina: a message from the 3D viewer could not be handled: {ex.Message}");
+            }
+        }
+
+        private void HandleMessage(string json) {
+            using var doc = JsonDocument.Parse(json);
             switch (doc.RootElement.GetProperty("event").GetString()) {
                 case "ready":
                     created = false;

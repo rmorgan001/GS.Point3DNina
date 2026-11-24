@@ -43,7 +43,8 @@ public sealed class ViewerSettings
     /// <summary>The camera the user saved (angle, tilt, zoom, what it looks at); null for the default view.</summary>
     public CameraView? Camera { get; set; }
 
-    private static string FilePath => Path.Combine(
+    /// <summary>Where the settings are kept.</summary>
+    public static string DefaultFilePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NINA", "Plugins", "GS.Point3DNina", "settings.json");
 
     private static readonly JsonSerializerOptions Json = new()
@@ -52,23 +53,56 @@ public sealed class ViewerSettings
         Converters = { new JsonStringEnumConverter() }
     };
 
-    public static ViewerSettings Load()
+    public static ViewerSettings Load(string? path = null)
     {
+        path ??= DefaultFilePath;
         try
         {
-            if (File.Exists(FilePath))
-                return JsonSerializer.Deserialize<ViewerSettings>(File.ReadAllText(FilePath), Json) ?? new();
+            if (File.Exists(path))
+                return Parse(File.ReadAllText(path));
         }
-        catch { /* a damaged file: start again from the defaults */ }
+        catch { /* an unreadable file: start again from the defaults */ }
         return new();
     }
 
-    public void Save()
+    /// <summary>
+    /// Reads settings one at a time, so a value that no longer fits (a renamed enum member, a hand edit) loses only
+    /// that setting to its default instead of resetting everything. A damaged file gives the defaults.
+    /// </summary>
+    public static ViewerSettings Parse(string json)
     {
+        var settings = new ViewerSettings();
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
-            File.WriteAllText(FilePath, JsonSerializer.Serialize(this, Json));
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind != JsonValueKind.Object) return settings;
+            foreach (var property in typeof(ViewerSettings).GetProperties())
+            {
+                if (!property.CanWrite) continue;
+                var match = doc.RootElement.EnumerateObject().FirstOrDefault(p => string.Equals(p.Name, property.Name, StringComparison.OrdinalIgnoreCase));
+                if (match.Value.ValueKind == JsonValueKind.Undefined) continue;
+                try
+                {
+                    object? value = property.PropertyType == typeof(AssemblySupport)
+                        ? Model3D.ParseAssemblySupport(match.Value.ValueKind == JsonValueKind.String ? match.Value.GetString() : null)
+                        : match.Value.Deserialize(property.PropertyType, Json);
+                    if (value != null || !property.PropertyType.IsValueType)
+                        property.SetValue(settings, value);
+                }
+                catch { /* this one setting is unusable: keep its default */ }
+            }
+        }
+        catch { /* a damaged file */ }
+        return settings;
+    }
+
+    public void Save(string? path = null)
+    {
+        path ??= DefaultFilePath;
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, JsonSerializer.Serialize(this, Json));
         }
         catch { /* the options are a convenience: never break the panel over them */ }
     }

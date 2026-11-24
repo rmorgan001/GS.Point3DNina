@@ -1,0 +1,11 @@
+# Keep the repository in LF; Git converts to the platform's line ending on checkout.
+* text=auto eol=lf
+*.ps1 text eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.glb binary
+*.babylon binary
+*.dds binary
+*.env binary
+*.zip binary

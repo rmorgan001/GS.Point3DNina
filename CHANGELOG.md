@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- A message from the 3D viewer that cannot be handled is now logged instead of reaching NINA.
+- One unusable value in the settings file no longer resets all your settings; only that setting returns to its default.
+- The README now explains the model's lag behind the mount (the polling interval) and that the assembled model is German equatorial only.
+- Line endings are now consistent (`.gitattributes`, `.editorconfig`).
+- Settings saving and loading is now covered by tests.
+- The build and release workflows now use GitHub Actions versions that run on Node.js 24 (the Node.js 20 deprecation warning is gone).
+
 ## 1.0.5.0
 
 - Fixed a harmless "the 3D viewer could not start (E_ABORT)" error that 1.0.4.0 wrote to NINA's log at startup.
