@@ -19,7 +19,7 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 
 <div align="center">
 
-![The 3D Model panel in NINA](assets/screenshot-3d-model.jpg)
+<img src="assets/screenshot-model.jpg" alt="The 3D Model panel in NINA" width="330"> <img src="assets/screenshot-options.jpg" alt="The GS.Point3DNina options in NINA" width="330">
 
 </div>
 
