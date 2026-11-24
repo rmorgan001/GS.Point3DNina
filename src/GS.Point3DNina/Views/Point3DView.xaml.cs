@@ -21,6 +21,7 @@ namespace GS.Point3DNina.Views {
 
         private Point3DDockable vm;
         private bool created;    // the scene exists, so commands can follow
+        private bool retired;    // a newer view has replaced this one and its WebView has been freed
         private string loadedModelKey;
 
         public Point3DView() {
@@ -49,6 +50,7 @@ namespace GS.Point3DNina.Views {
                     "NINA", "Plugins", "GS.Point3DNina", "WebView2");
                 Web.CreationProperties = new CoreWebView2CreationProperties { UserDataFolder = data };
                 await Web.EnsureCoreWebView2Async();
+                if (retired) return; // replaced while starting (NINA builds its panel layout more than once)
 
                 // Serve the plugin's Assets folder as a site, so the viewer's ES modules and models load normally.
                 var assets = Path.Combine(Path.GetDirectoryName(typeof(Point3DDockable).Assembly.Location)!, "Assets");
@@ -58,6 +60,8 @@ namespace GS.Point3DNina.Views {
                 Web.CoreWebView2.WebMessageReceived += OnMessage;
                 Web.CoreWebView2.Navigate($"https://{Host}/viewer.html");
             } catch (Exception ex) {
+                // Freeing a replaced view aborts its start (E_ABORT): expected, and the newer view carries on.
+                if (retired) return;
                 NINA.Core.Utility.Logger.Error($"GS.Point3DNina: the 3D viewer could not start: {ex.Message}");
             }
         }
@@ -77,6 +81,7 @@ namespace GS.Point3DNina.Views {
         /// browser process), which would otherwise live as long as the plugin.
         /// </summary>
         private void Retire() {
+            retired = true;
             Detach();
             created = false;
             loadedModelKey = null;
