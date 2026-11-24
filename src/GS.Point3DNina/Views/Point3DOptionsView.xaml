@@ -44,6 +44,20 @@
             <CheckBox IsChecked="{Binding ShowCardinals}" />
             <TextBlock Text="N E S W" Style="{StaticResource Label}" Margin="6,0,0,0" />
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,2">
+            <CheckBox IsChecked="{Binding ShowCoordinates}" />
+            <TextBlock Text="Coordinates" Style="{StaticResource Label}" Margin="6,0,0,0" />
+        </StackPanel>
+        <!-- Which coordinates show, and RA's units. Double-clicking the RA chip in the view switches its units too. -->
+        <WrapPanel Margin="26,0,0,2" IsEnabled="{Binding ShowCoordinates}">
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding ShowRa}" /><TextBlock Text="RA" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding ShowDec}" /><TextBlock Text="Dec" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding ShowAz}" /><TextBlock Text="Az" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding ShowAlt}" /><TextBlock Text="Alt" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding ShowLha}" /><TextBlock Text="LHA" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding ShowLst}" /><TextBlock Text="LST" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding RaInDegrees}" /><TextBlock Text="RA in degrees" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
+        </WrapPanel>
         <StackPanel Orientation="Horizontal" Margin="0,2,0,6"
                     ToolTip="A compass in the corner of the view showing which way the camera faces. Click it to turn the view to face north.">
             <CheckBox IsChecked="{Binding ShowHeading}" />

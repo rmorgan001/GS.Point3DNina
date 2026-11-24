@@ -69,6 +69,27 @@ namespace GS.Point3DNina.Test {
         }
 
         [Test]
+        public void ViewerPageHasTheCoordinateChipsAndCommand() {
+            var html = File.ReadAllText(Path.Combine(AssetsDirectory, "viewer.html"));
+            Assert.Multiple(() => {
+                Assert.That(html, Does.Contain("id=\"coords\""), "the chips container");
+                Assert.That(html, Does.Contain("setCoordinates:"), "the command the host sends");
+                Assert.That(html, Does.Contain("toggleRa"), "the RA double-click event the host handles");
+            });
+        }
+
+        [Test]
+        public void CoordinatesAreOnByDefaultWithEveryItemShown() {
+            var settings = new ViewerSettings();
+            Assert.Multiple(() => {
+                Assert.That(settings.ShowCoordinates, Is.True);
+                Assert.That(new[] { settings.ShowRa, settings.ShowDec, settings.ShowAz, settings.ShowAlt, settings.ShowLha, settings.ShowLst },
+                    Is.All.True);
+                Assert.That(settings.RaInDegrees, Is.False);
+            });
+        }
+
+        [Test]
         public void ThemeDefaultsToDark() => Assert.That(new ViewerSettings().Theme, Is.EqualTo(ViewerTheme.Dark));
 
         [Test]

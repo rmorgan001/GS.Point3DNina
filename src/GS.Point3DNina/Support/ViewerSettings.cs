@@ -23,6 +23,16 @@ public sealed class ViewerSettings
     public string Background { get; set; } = ModelAppearance.DefaultBackground;
     public ViewerTheme Theme { get; set; } = ViewerTheme.Dark;
     public bool ShowGrid { get; set; } = true;
+    /// <summary>The coordinate chips over the top of the scene (the mount's RA, Dec, Az, Alt, hour angle and sidereal time).</summary>
+    public bool ShowCoordinates { get; set; } = true;
+    public bool ShowRa { get; set; } = true;
+    public bool ShowDec { get; set; } = true;
+    public bool ShowAz { get; set; } = true;
+    public bool ShowAlt { get; set; } = true;
+    public bool ShowLha { get; set; } = true;
+    public bool ShowLst { get; set; } = true;
+    /// <summary>RA shown in degrees instead of hours (double-click the RA chip to switch).</summary>
+    public bool RaInDegrees { get; set; }
     public bool ShowCardinals { get; set; } = true;
     /// <summary>The compass readout over the scene: a needle pointing north and the bearing the camera faces. Click it to face north.</summary>
     public bool ShowHeading { get; set; }

@@ -142,6 +142,32 @@ namespace GS.Point3DNina {
         public string Color => Settings.Color;
         public ViewerTheme Theme => Settings.Theme;
         public bool ShowGrid => Settings.ShowGrid;
+        public bool ShowCoordinates => Settings.ShowCoordinates;
+
+        /// <summary>The coordinate chips to show, in order, with the mount's values (dashes while it isn't connected).</summary>
+        public object CoordinateItems() {
+            var items = new List<object>();
+            var c = Connected;
+            string Dms(double v) => c ? CoordinateFormat.DegreesToDms(v, "° ", ":", "", 2) : "--";
+            if (Settings.ShowRa) {
+                var ra = !c ? "--" : Settings.RaInDegrees
+                    ? CoordinateFormat.DegreesToDms(info.RightAscension * 15.0, "° ", ":", "", 2)
+                    : CoordinateFormat.HoursToHms(info.RightAscension, "h ", ":", "", 2);
+                items.Add(new { label = "Ra", value = ra, title = "Double-click to switch between hours and degrees", ra = true });
+            }
+            if (Settings.ShowDec) items.Add(new { label = "Dec", value = Dms(c ? info.Declination : 0), title = "", ra = false });
+            if (Settings.ShowAz) items.Add(new { label = "Az", value = Dms(c ? info.Azimuth : 0), title = "", ra = false });
+            if (Settings.ShowAlt) items.Add(new { label = "Alt", value = Dms(c ? info.Altitude : 0), title = "", ra = false });
+            if (Settings.ShowLha) items.Add(new {
+                label = "Lha",
+                value = c ? CoordinateFormat.HoursToHms(Coordinate.Ra2Ha12(info.RightAscension, info.SiderealTime)) : "--",
+                title = "Local hour angle", ra = false });
+            if (Settings.ShowLst) items.Add(new {
+                label = "Lst",
+                value = c ? CoordinateFormat.HoursToHms(info.SiderealTime, "h ", ":", "", 2) : "--",
+                title = "Local sidereal time", ra = false });
+            return items;
+        }
         public bool ShowCardinals => Settings.ShowCardinals;
         public bool ShowHeading => Settings.ShowHeading;
         public CardinalSize CardinalSize => Settings.CardinalSize;

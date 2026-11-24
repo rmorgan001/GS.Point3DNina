@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace GS.Point3DNina {
 
     /// <summary>What changed, so the view updates only that part of the scene.</summary>
-    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme }
+    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme, Coordinates }
 
     /// <summary>One entry of the alignment mode list.</summary>
     public record ModeChoice(AlignmentModes? Mode, string Name);
@@ -120,6 +120,38 @@ namespace GS.Point3DNina {
         public string BackgroundKey {
             get => ModelAppearance.GetBackground(Settings.Background).Key;
             set { Settings.Background = value; Apply(ViewerChange.Background, nameof(BackgroundKey)); }
+        }
+        public bool ShowCoordinates {
+            get => Settings.ShowCoordinates;
+            set { Settings.ShowCoordinates = value; Apply(ViewerChange.Coordinates, nameof(ShowCoordinates)); }
+        }
+        public bool ShowRa {
+            get => Settings.ShowRa;
+            set { Settings.ShowRa = value; Apply(ViewerChange.Coordinates, nameof(ShowRa)); }
+        }
+        public bool ShowDec {
+            get => Settings.ShowDec;
+            set { Settings.ShowDec = value; Apply(ViewerChange.Coordinates, nameof(ShowDec)); }
+        }
+        public bool ShowAz {
+            get => Settings.ShowAz;
+            set { Settings.ShowAz = value; Apply(ViewerChange.Coordinates, nameof(ShowAz)); }
+        }
+        public bool ShowAlt {
+            get => Settings.ShowAlt;
+            set { Settings.ShowAlt = value; Apply(ViewerChange.Coordinates, nameof(ShowAlt)); }
+        }
+        public bool ShowLha {
+            get => Settings.ShowLha;
+            set { Settings.ShowLha = value; Apply(ViewerChange.Coordinates, nameof(ShowLha)); }
+        }
+        public bool ShowLst {
+            get => Settings.ShowLst;
+            set { Settings.ShowLst = value; Apply(ViewerChange.Coordinates, nameof(ShowLst)); }
+        }
+        public bool RaInDegrees {
+            get => Settings.RaInDegrees;
+            set { Settings.RaInDegrees = value; Apply(ViewerChange.Coordinates, nameof(RaInDegrees)); }
         }
         public ViewerTheme Theme {
             get => Settings.Theme;

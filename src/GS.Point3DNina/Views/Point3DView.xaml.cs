@@ -72,6 +72,7 @@ namespace GS.Point3DNina.Views {
                             cardinals = vm.ShowCardinals,
                             cardinalSize = vm.CardinalSize.ToString().ToLowerInvariant(),
                             heading = vm.ShowHeading,
+                            coordinates = vm.ShowCoordinates,
                             theme = vm.Theme.ToString().ToLowerInvariant(),
                             northern = vm.UseNorthCompass,
                             secondaryColor = "#e8e6df"
@@ -80,10 +81,14 @@ namespace GS.Point3DNina.Views {
                     break;
                 case "created":
                     created = true;
+                    SendCoordinates();
                     LoadModel();
                     break;
                 case "modelLoaded":
                     SendPose();
+                    break;
+                case "toggleRa":
+                    vm.Options.RaInDegrees = !vm.Options.RaInDegrees;
                     break;
                 case "error":
                     NINA.Core.Utility.Logger.Error($"GS.Point3DNina viewer: {doc.RootElement.GetProperty("message").GetString()}");
@@ -100,6 +105,11 @@ namespace GS.Point3DNina.Views {
             Send(new { cmd = "loadModel", url = vm.ModelUrl, mount = vm.MountInfo });
         }
 
+        private void SendCoordinates() {
+            if (!created) return;
+            Send(new { cmd = "setCoordinates", visible = vm.ShowCoordinates, items = vm.CoordinateItems() });
+        }
+
         private void SendPose() {
             if (!created) return;
             var (x, y, z, yCentre) = vm.CurrentPose();
@@ -111,8 +121,9 @@ namespace GS.Point3DNina.Views {
             Dispatcher.BeginInvoke(() => {
                 if (!created) return;
                 switch (change) {
-                    case ViewerChange.Pose: SendPose(); break;
-                    case ViewerChange.Model: LoadModel(); break;
+                    case ViewerChange.Pose: SendPose(); SendCoordinates(); break;
+                    case ViewerChange.Coordinates: SendCoordinates(); break;
+                    case ViewerChange.Model: LoadModel(); SendCoordinates(); break;
                     case ViewerChange.Color: Send(new { cmd = "setModelColor", hex = vm.Color }); break;
                     case ViewerChange.Background: Send(new { cmd = "setBackground", background = vm.Background }); break;
                     case ViewerChange.Grid: Send(new { cmd = "setGrid", visible = vm.ShowGrid }); break;
