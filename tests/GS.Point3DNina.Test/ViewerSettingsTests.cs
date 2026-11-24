@@ -73,6 +73,54 @@ namespace GS.Point3DNina.Test {
         }
 
         [Test]
+        public void SavesFromSeveralThreadsNeverLoseOrCorruptTheFile() {
+            var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, $"concurrent-{Guid.NewGuid():N}", "settings.json");
+            try {
+                var settings = new ViewerSettings { RaOffset = 12 };
+                Parallel.For(0, 64, _ => settings.Save(path));
+                Assert.Multiple(() => {
+                    Assert.That(ViewerSettings.Parse(File.ReadAllText(path)).RaOffset, Is.EqualTo(12));
+                    Assert.That(File.Exists(path + ".tmp"), Is.False);
+                });
+            } finally {
+                Directory.Delete(Path.GetDirectoryName(path)!, true);
+            }
+        }
+
+        [Test]
+        public void AnOldForkMountKeepsTheDefaultMountsSuggestionsForLaterChanges() {
+            var fork = Model3D.GetSuggestedParts(AssemblyMount.Fork);
+            var defaults = Model3D.GetSuggestedParts(Model3D.DefaultAssemblyMount);
+            var s = new ViewerSettings { Mount = AssemblyMount.Fork, Support = fork.Support, Ota = fork.Ota };
+            Point3DOptions.MigrateFork(s);
+            Assert.Multiple(() => {
+                Assert.That(s.Mount, Is.EqualTo(Model3D.DefaultAssemblyMount));
+                Assert.That(s.Support, Is.EqualTo(defaults.Support));
+                Assert.That(s.Ota, Is.EqualTo(defaults.Ota));
+            });
+        }
+
+        [Test]
+        public void AnOldForkMountKeepsASupportOrOtaThatWasChanged() {
+            var s = new ViewerSettings { Mount = AssemblyMount.Fork, Support = AssemblySupport.SmallPier, Ota = AssemblyOta.Newtonian };
+            Point3DOptions.MigrateFork(s);
+            Assert.Multiple(() => {
+                Assert.That(s.Support, Is.EqualTo(AssemblySupport.SmallPier));
+                Assert.That(s.Ota, Is.EqualTo(AssemblyOta.Newtonian));
+            });
+        }
+
+        [Test]
+        public void AMountThatIsNotAForkIsLeftAlone() {
+            var s = new ViewerSettings { Mount = AssemblyMount.Heq5Pro, Support = AssemblySupport.LargePier, Ota = AssemblyOta.Refractor };
+            Point3DOptions.MigrateFork(s);
+            Assert.Multiple(() => {
+                Assert.That(s.Mount, Is.EqualTo(AssemblyMount.Heq5Pro));
+                Assert.That(s.Support, Is.EqualTo(AssemblySupport.LargePier));
+            });
+        }
+
+        [Test]
         public void SavingLeavesNoTemporaryFileBehind() {
             var dir = Path.Combine(Path.GetTempPath(), "gs-point3d-test-" + Guid.NewGuid().ToString("N"));
             try {

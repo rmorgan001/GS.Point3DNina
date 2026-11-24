@@ -185,7 +185,10 @@ namespace GS.Point3DNina.Views {
                     // The viewer reports a model it could not load as text rather than an error.
                     if (doc.RootElement.TryGetProperty("result", out var loadResult) && loadResult.ValueKind == JsonValueKind.String
                         && loadResult.GetString()!.StartsWith("Error", StringComparison.OrdinalIgnoreCase))
+                    {
                         NINA.Core.Utility.Logger.Warning($"GS.Point3DNina: the 3D model could not be loaded: {loadResult.GetString()}");
+                        loadedModelKey = null; // so showing the panel again, or the next option change, tries again
+                    }
                     SendPose();
                     break;
                 case "camera":

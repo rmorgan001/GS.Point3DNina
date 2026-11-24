@@ -28,28 +28,55 @@ namespace GS.Point3DNina {
             Settings = ViewerSettings.Load();
             saveTimer = new System.Threading.Timer(_ => Flush(), null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             // The assembled model is a German equatorial mount only: a saved fork mount (an old list entry) isn't one.
-            if (Settings.Mount == AssemblyMount.Fork) Settings.Mount = Model3D.DefaultAssemblyMount;
+            MigrateFork(Settings);
             PickColorCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<object>(o => Color = (string)o);
             SaveViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => SaveViewRequested?.Invoke());
             ResetViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => Changed?.Invoke(ViewerChange.View));
             ForgetViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => StoreView(null));
         }
 
+        /// <summary>
+        /// The assembled model is a German equatorial mount only: a saved fork mount (an old list entry) isn't one. It
+        /// becomes the default mount, and the support and OTA that came with the fork (unless changed) become that
+        /// mount's, so a later mount change still follows its suggestions.
+        /// </summary>
+        public static void MigrateFork(ViewerSettings settings) {
+            if (settings.Mount != AssemblyMount.Fork) return;
+            var fork = Model3D.GetSuggestedParts(AssemblyMount.Fork);
+            var suggested = Model3D.GetSuggestedParts(Model3D.DefaultAssemblyMount);
+            if (settings.Support == fork.Support) settings.Support = suggested.Support;
+            if (settings.Ota == fork.Ota) settings.Ota = suggested.Ota;
+            settings.Mount = Model3D.DefaultAssemblyMount;
+        }
+
         public ViewerSettings Settings { get; }
 
         // Changes are written a moment after the last one, so stepping through a list doesn't write the file each time.
         private readonly System.Threading.Timer saveTimer;
+        private readonly object saveLock = new();
         private int savePending;
         private const int SaveDelayMs = 300;
 
         private void ScheduleSave() {
             System.Threading.Volatile.Write(ref savePending, 1);
-            saveTimer.Change(SaveDelayMs, System.Threading.Timeout.Infinite);
+            try { saveTimer.Change(SaveDelayMs, System.Threading.Timeout.Infinite); }
+            catch (ObjectDisposedException) { Flush(); } // after shutdown: write at once
         }
 
-        /// <summary>Writes any change not yet saved (called when the plugin shuts down).</summary>
+        /// <summary>
+        /// Writes any change not yet saved. It takes the lock first, so it also waits for a write that the timer has
+        /// already started.
+        /// </summary>
         public void Flush() {
-            if (System.Threading.Interlocked.Exchange(ref savePending, 0) == 1) Settings.Save();
+            lock (saveLock) {
+                if (System.Threading.Interlocked.Exchange(ref savePending, 0) == 1) Settings.Save();
+            }
+        }
+
+        /// <summary>Saves what is pending and stops the save timer (called when the plugin shuts down).</summary>
+        public void Shutdown() {
+            Flush();
+            saveTimer.Dispose();
         }
 
         /// <summary>Raised on any change that needs the scene updated.</summary>
@@ -239,7 +266,10 @@ namespace GS.Point3DNina {
                 return;
             }
             Settings.Camera = view;
-            Settings.Save();
+            lock (saveLock) {
+                System.Threading.Interlocked.Exchange(ref savePending, 0); // this write includes any pending change
+                Settings.Save();
+            }
             RaisePropertyChanged(nameof(HasSavedView));
             if (view == null) Changed?.Invoke(ViewerChange.View);
         }

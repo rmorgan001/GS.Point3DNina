@@ -118,9 +118,13 @@ public sealed class ViewerSettings
         if (!CameraView.IsUsable(Camera)) Camera = null;
     }
 
+    // Saves are one at a time: they all write the same temporary file before swapping it in.
+    private static readonly object SaveLock = new();
+
     public void Save(string? path = null)
     {
         path ??= DefaultFilePath;
+        lock (SaveLock)
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);

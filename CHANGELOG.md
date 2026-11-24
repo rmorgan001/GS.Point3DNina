@@ -4,7 +4,8 @@
 
 - A saved view with numbers that can't be used (a missing or zero zoom distance, or values that aren't finite) is no longer kept or loaded; the default view applies instead.
 - Settings read from the file are kept in range: RA and Dec offsets within -90 to 90, a polling time that is Match NINA or 3 to 10 whole seconds, and a `#rrggbb` colour. Anything else returns to its default.
-- A model the viewer cannot load is now reported in NINA's log.
+- A model the viewer cannot load is now reported in NINA's log, and is tried again when the panel is shown again or an option changes.
+- A settings file saved with the old fork mount now moves to the default mount together with its support and telescope, so choosing another mount afterwards still suggests the right parts.
 - Connecting or disconnecting the mount now shows in the model and coordinates at once, even with a slower polling time.
 - The model is no longer reloaded when the mount reports its latitude with tiny differences from one poll to the next.
 - Choosing a mount now keeps a support or telescope you changed yourself, instead of replacing them.
