@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace GS.Point3DNina {
 
     /// <summary>What changed, so the view updates only that part of the scene.</summary>
-    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading }
+    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme }
 
     /// <summary>One entry of the alignment mode list.</summary>
     public record ModeChoice(AlignmentModes? Mode, string Name);
@@ -49,6 +49,7 @@ namespace GS.Point3DNina {
         public IReadOnlyList<int> Offsets { get; } = Model3D.OffsetValues;
         public IReadOnlyList<SceneBackground> Backgrounds { get; } = ModelAppearance.Backgrounds;
         public IReadOnlyList<ModelColorPreset> Colors { get; } = ModelAppearance.ColorPresets;
+        public IReadOnlyList<ViewerTheme> Themes { get; } = [.. Enum.GetValues<ViewerTheme>()];
         public IReadOnlyList<CardinalSize> CardinalSizes { get; } = [.. Enum.GetValues<CardinalSize>()];
         public IReadOnlyList<PolarMode> PolarModes { get; } = [.. Enum.GetValues<PolarMode>()];
 
@@ -119,6 +120,10 @@ namespace GS.Point3DNina {
         public string BackgroundKey {
             get => ModelAppearance.GetBackground(Settings.Background).Key;
             set { Settings.Background = value; Apply(ViewerChange.Background, nameof(BackgroundKey)); }
+        }
+        public ViewerTheme Theme {
+            get => Settings.Theme;
+            set { Settings.Theme = value; Apply(ViewerChange.Theme, nameof(Theme)); }
         }
         public bool ShowGrid {
             get => Settings.ShowGrid;

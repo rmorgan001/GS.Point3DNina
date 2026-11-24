@@ -54,6 +54,24 @@ namespace GS.Point3DNina.Test {
         }
 
         [Test]
+        public void EveryThemeHasItsColoursInTheViewerPageAndTheSceneKnowsIt() {
+            var html = File.ReadAllText(Path.Combine(AssetsDirectory, "viewer.html"));
+            Assert.Multiple(() => {
+                Assert.That(html, Does.Contain("setTheme:"), "the command the host sends");
+                foreach (var theme in Enum.GetValues<ViewerTheme>().Where(t => t != ViewerTheme.Dark)) {
+                    var name = theme.ToString().ToLowerInvariant();
+                    Assert.That(html, Does.Contain($":root[data-theme=\"{name}\"]"), $"colours for {theme}");
+                    Assert.That(html, Does.Contain($"'{name}'"), $"{theme} is accepted by setTheme");
+                }
+                // Dusk and Night also tint the whole picture to one colour in the viewer.
+                Assert.That(KeysOf(ViewerScript, "LOOK_FILTERS"), Is.EquivalentTo(new[] { "night", "dusk" }));
+            });
+        }
+
+        [Test]
+        public void ThemeDefaultsToDark() => Assert.That(new ViewerSettings().Theme, Is.EqualTo(ViewerTheme.Dark));
+
+        [Test]
         public void CompassHeadingIsOffByDefault() => Assert.That(new ViewerSettings().ShowHeading, Is.False);
 
         public static IEnumerable<TestCaseData> ModelCombinations() {

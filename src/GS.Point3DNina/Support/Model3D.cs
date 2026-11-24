@@ -39,6 +39,18 @@ public enum CoordinatesLayout
     None
 }
 
+/// <summary>
+/// The colour theme of the 3D view's scene, as in Green Swamp's other apps (viewer.html sets data-theme from the lower-case
+/// name; model3d.js reads the palette). Night is red only and Dusk amber only, to keep dark adaptation.
+/// </summary>
+public enum ViewerTheme
+{
+    Dark,
+    Day,
+    Dusk,
+    Night
+}
+
 /// <summary>How big the distant N E S W letters in the 3D view are (model3d.js CARDINAL_SIZES).</summary>
 public enum CardinalSize
 {

@@ -72,6 +72,7 @@ namespace GS.Point3DNina.Views {
                             cardinals = vm.ShowCardinals,
                             cardinalSize = vm.CardinalSize.ToString().ToLowerInvariant(),
                             heading = vm.ShowHeading,
+                            theme = vm.Theme.ToString().ToLowerInvariant(),
                             northern = vm.UseNorthCompass,
                             secondaryColor = "#e8e6df"
                         }
@@ -115,6 +116,7 @@ namespace GS.Point3DNina.Views {
                     case ViewerChange.Color: Send(new { cmd = "setModelColor", hex = vm.Color }); break;
                     case ViewerChange.Background: Send(new { cmd = "setBackground", background = vm.Background }); break;
                     case ViewerChange.Grid: Send(new { cmd = "setGrid", visible = vm.ShowGrid }); break;
+                    case ViewerChange.Theme: Send(new { cmd = "setTheme", theme = vm.Theme.ToString().ToLowerInvariant() }); break;
                     case ViewerChange.Heading: Send(new { cmd = "setHeading", visible = vm.ShowHeading }); break;
                     case ViewerChange.Cardinals:
                         Send(new { cmd = "setCardinals", visible = vm.ShowCardinals });

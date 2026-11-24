@@ -140,6 +140,7 @@ namespace GS.Point3DNina {
         public bool UseNorthCompass => Model3D.UseNorthCompass(Mode, Latitude);
 
         public string Color => Settings.Color;
+        public ViewerTheme Theme => Settings.Theme;
         public bool ShowGrid => Settings.ShowGrid;
         public bool ShowCardinals => Settings.ShowCardinals;
         public bool ShowHeading => Settings.ShowHeading;

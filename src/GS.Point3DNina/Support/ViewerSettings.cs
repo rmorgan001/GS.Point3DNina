@@ -21,6 +21,7 @@ public sealed class ViewerSettings
     public PolarMode PolarMode { get; set; } = PolarMode.Left;
     public string Color { get; set; } = ModelAppearance.DefaultColor;
     public string Background { get; set; } = ModelAppearance.DefaultBackground;
+    public ViewerTheme Theme { get; set; } = ViewerTheme.Dark;
     public bool ShowGrid { get; set; } = true;
     public bool ShowCardinals { get; set; } = true;
     /// <summary>The compass readout over the scene: a needle pointing north and the bearing the camera faces. Click it to face north.</summary>

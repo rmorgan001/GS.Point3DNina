@@ -111,6 +111,14 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <TextBlock Text="Theme" Style="{StaticResource Label}" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}"
+                      ToolTip="Dark, Day, Dusk (amber only) or Night (red only, to keep your eyes dark adapted)." />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <TextBlock Text="Background" Style="{StaticResource Label}" />
             <ComboBox Grid.Column="1" ItemsSource="{Binding Backgrounds}"
                       SelectedValuePath="Key" DisplayMemberPath="Name" SelectedValue="{Binding BackgroundKey}" />
