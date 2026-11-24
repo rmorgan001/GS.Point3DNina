@@ -65,7 +65,7 @@ GS.Point3DNina is free software, released under the [GNU General Public License 
     <PluginLicenseUrl>https://www.gnu.org/licenses/gpl-3.0.html</PluginLicenseUrl>
     <PluginChangelogUrl>https://github.com/rmorgan001/GS.Point3DNina/blob/main/CHANGELOG.md</PluginChangelogUrl>
     <PluginFeaturedImageUrl>https://raw.githubusercontent.com/rmorgan001/GS.Point3DNina/main/assets/icon.png</PluginFeaturedImageUrl>
-    <PluginScreenshotUrl></PluginScreenshotUrl>
+    <PluginScreenshotUrl>https://raw.githubusercontent.com/rmorgan001/GS.Point3DNina/main/assets/screenshot-3d-model.jpg</PluginScreenshotUrl>
     <PluginAltScreenshotUrl></PluginAltScreenshotUrl>
   </PropertyGroup>
   <ItemGroup>
