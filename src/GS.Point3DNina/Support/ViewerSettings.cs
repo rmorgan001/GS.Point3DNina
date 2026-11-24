@@ -99,7 +99,22 @@ public sealed class ViewerSettings
             }
         }
         catch { /* a damaged file */ }
+        settings.KeepInRange();
         return settings;
+    }
+
+    /// <summary>
+    /// Brings values that parse but that no option offers back into range: offsets are clamped to whole degrees within
+    /// -90 to 90, a polling time that isn't offered (0, or 3 to 10 whole seconds) and an unusable colour return to
+    /// their defaults.
+    /// </summary>
+    private void KeepInRange()
+    {
+        RaOffset = (int)Model3D.ClampOffset(RaOffset);
+        DecOffset = (int)Model3D.ClampOffset(DecOffset);
+        if (!(PollingSeconds == 0 || (PollingSeconds is >= 3 and <= 10 && PollingSeconds == Math.Floor(PollingSeconds))))
+            PollingSeconds = 0;
+        Color = ModelAppearance.NormalizeColor(Color);
     }
 
     public void Save(string? path = null)

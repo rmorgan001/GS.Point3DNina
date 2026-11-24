@@ -82,7 +82,7 @@ namespace GS.Point3DNina {
             RaisePropertyChanged(nameof(Connected));
             RaisePropertyChanged(nameof(StatusText));
             // A new mode or latitude means a different pier and tilt: the model loads again.
-            if (Mode != modeBefore || Latitude != latitudeBefore) {
+            if (Mode != modeBefore || LatitudeChanged(latitudeBefore, Latitude)) {
                 lastPoseTick = Environment.TickCount64;
                 Changed?.Invoke(ViewerChange.Model);
                 return;
@@ -94,6 +94,13 @@ namespace GS.Point3DNina {
             lastPoseTick = now;
             Changed?.Invoke(ViewerChange.Pose);
         }
+
+        /// <summary>
+        /// Whether the latitude moved enough to need a new model: by a hundredth of a degree or more (the pose rounds it
+        /// to two places), so a mount that reports it with tiny differences from one poll to the next is not a change.
+        /// </summary>
+        public static bool LatitudeChanged(double before, double after)
+            => !(Math.Abs(after - before) < 0.01);
 
         /// <summary>NINA's Device polling interval, in seconds.</summary>
         private double NinaPollingSeconds => profileService.ActiveProfile.ApplicationSettings.DevicePollingInterval;

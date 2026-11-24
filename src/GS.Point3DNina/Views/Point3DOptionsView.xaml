@@ -115,7 +115,7 @@
 
         <!-- Mount type: only German polar when assembled, so the list holds just that. -->
         <Grid Style="{StaticResource Row}"
-              ToolTip="How the mount is aligned: German polar, fork polar or alt-az. Only German polar is offered for the assembled model.">
+              ToolTip="How the mount is aligned: Follow telescope uses what the connected mount reports, or choose German polar, Polar (fork) or Alt-Az yourself. Only German polar is offered for the assembled model.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -133,7 +133,7 @@
         </Grid>
 
         <Grid Style="{StaticResource Row}"
-              ToolTip="The colour behind the model in the 3D Model panel.">
+              ToolTip="The picture behind the model in the 3D Model panel: a nebula or galaxy photo, a generated star field, or a plain dark sky.">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>

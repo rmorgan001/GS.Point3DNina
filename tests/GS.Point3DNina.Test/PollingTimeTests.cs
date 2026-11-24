@@ -14,6 +14,14 @@ namespace GS.Point3DNina.Test {
         public void TheModelFollowsAtTheSlowerOfThePollingTimeAndNinas(double polling, double nina, double expected)
             => Assert.That(Point3DDockable.EffectiveIntervalSeconds(polling, nina), Is.EqualTo(expected));
 
+        [TestCase(51.5, 51.5, false)]
+        [TestCase(51.5, 51.5004, false)]  // jitter in what the mount reports
+        [TestCase(51.5, 51.52, true)]
+        [TestCase(51.5, -33.9, true)]
+        [TestCase(51.5, double.NaN, true)]
+        public void OnlyARealLatitudeChangeReloadsTheModel(double before, double after, bool expected)
+            => Assert.That(Point3DDockable.LatitudeChanged(before, after), Is.EqualTo(expected));
+
         [Test]
         public void EveryReportIsFollowedWhenMatchingNina() {
             Assert.Multiple(() => {

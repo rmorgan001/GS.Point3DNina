@@ -26,6 +26,35 @@ namespace GS.Point3DNina.Test {
             });
         }
 
+        [TestCase("{\"RaOffset\":500,\"DecOffset\":-500}", 90, -90)]
+        [TestCase("{\"RaOffset\":-12,\"DecOffset\":45}", -12, 45)]
+        public void OffsetsAreKeptWithinTheLists(string json, int ra, int dec) {
+            var s = ViewerSettings.Parse(json);
+            Assert.Multiple(() => {
+                Assert.That(s.RaOffset, Is.EqualTo(ra));
+                Assert.That(s.DecOffset, Is.EqualTo(dec));
+            });
+        }
+
+        [TestCase("0", 0.0)]
+        [TestCase("3", 3.0)]
+        [TestCase("10", 10.0)]
+        [TestCase("-1", 0.0)]
+        [TestCase("1", 0.0)]
+        [TestCase("4.5", 0.0)]
+        [TestCase("11", 0.0)]
+        [TestCase("1000000000", 0.0)]
+        public void APollingTimeThatIsNotOfferedReturnsToMatchingNina(string value, double expected)
+            => Assert.That(ViewerSettings.Parse("{\"PollingSeconds\":" + value + "}").PollingSeconds, Is.EqualTo(expected));
+
+        [Test]
+        public void AnUnusableColourReturnsToTheDefault() {
+            Assert.Multiple(() => {
+                Assert.That(ViewerSettings.Parse("{\"Color\":\"red\"}").Color, Is.EqualTo(ModelAppearance.DefaultColor));
+                Assert.That(ViewerSettings.Parse("{\"Color\":\"#F2C84B\"}").Color, Is.EqualTo("#f2c84b"));
+            });
+        }
+
         [Test]
         public void SavingLeavesNoTemporaryFileBehind() {
             var dir = Path.Combine(Path.GetTempPath(), "gs-point3d-test-" + Guid.NewGuid().ToString("N"));
