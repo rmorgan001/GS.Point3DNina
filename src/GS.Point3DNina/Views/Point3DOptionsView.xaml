@@ -167,6 +167,21 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <TextBlock Text="View" Style="{StaticResource Label}" />
+            <WrapPanel Grid.Column="1">
+                <Button Content="Save view" Margin="0,2,6,2" Padding="10,3" Command="{Binding SaveViewCommand}"
+                        ToolTip="Keep the camera as it is now: the angle, tilt and zoom you have set in the 3D Model panel. It is used each time the panel opens." />
+                <Button Content="Reset view" Margin="0,2,6,2" Padding="10,3" Command="{Binding ResetViewCommand}"
+                        ToolTip="Move the camera back to the saved view, or to the default view if none is saved." />
+                <Button Content="Use default" Margin="0,2,6,2" Padding="10,3" Command="{Binding ForgetViewCommand}"
+                        IsEnabled="{Binding HasSavedView}"
+                        ToolTip="Forget the saved view and go back to the default one." />
+            </WrapPanel>
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <TextBlock Text="RA offset °" Style="{StaticResource Label}" />
             <ComboBox Grid.Column="1" ItemsSource="{Binding Offsets}" SelectedItem="{Binding RaOffset}" />
         </Grid>

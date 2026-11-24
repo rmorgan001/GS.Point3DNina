@@ -40,6 +40,8 @@ public sealed class ViewerSettings
     public int RaOffset { get; set; }
     public int DecOffset { get; set; }
     public bool OptionsOpen { get; set; } = true;
+    /// <summary>The camera the user saved (angle, tilt, zoom, what it looks at); null for the default view.</summary>
+    public CameraView? Camera { get; set; }
 
     private static string FilePath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NINA", "Plugins", "GS.Point3DNina", "settings.json");

@@ -2,6 +2,7 @@ using GS.Point3DNina.Shared;
 using GS.Point3DNina.Support;
 using NUnit.Framework;
 using System.IO;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace GS.Point3DNina.Test {
@@ -88,6 +89,30 @@ namespace GS.Point3DNina.Test {
                 Assert.That(settings.RaInDegrees, Is.False);
             });
         }
+
+        [Test]
+        public void ViewerPageCanReportAndRestoreTheCamera() {
+            var html = File.ReadAllText(Path.Combine(AssetsDirectory, "viewer.html"));
+            Assert.Multiple(() => {
+                Assert.That(html, Does.Contain("getCamera:"), "reports the camera for Save view");
+                Assert.That(html, Does.Contain("setCamera:"), "moves the camera for Reset view");
+                Assert.That(ViewerScript, Does.Contain("export function getCamera"));
+                Assert.That(ViewerScript, Does.Contain("export function setCamera"));
+            });
+        }
+
+        [Test]
+        public void TheCameraTheViewerReportsReadsBackAndSerialisesForTheViewer() {
+            // The viewer's getCamera() names (alpha, beta, radius, targetX...) are what the host reads and sends back.
+            var web = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+            var reported = "{\"alpha\":123.45,\"beta\":67.8,\"radius\":42.5,\"targetX\":1.5,\"targetY\":-2,\"targetZ\":3.25}";
+            var view = JsonSerializer.Deserialize<CameraView>(reported, web)!;
+            Assert.That(view, Is.EqualTo(new CameraView(123.45, 67.8, 42.5, 1.5, -2, 3.25)));
+            Assert.That(JsonSerializer.Serialize(view, web), Is.EqualTo(reported));
+        }
+
+        [Test]
+        public void NoSavedViewMeansTheDefaultView() => Assert.That(new ViewerSettings().Camera, Is.Null);
 
         [Test]
         public void ThemeDefaultsToDark() => Assert.That(new ViewerSettings().Theme, Is.EqualTo(ViewerTheme.Dark));

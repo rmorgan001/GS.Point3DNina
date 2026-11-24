@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace GS.Point3DNina {
 
     /// <summary>What changed, so the view updates only that part of the scene.</summary>
-    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme, Coordinates }
+    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme, Coordinates, View }
 
     /// <summary>One entry of the alignment mode list.</summary>
     public record ModeChoice(AlignmentModes? Mode, string Name);
@@ -29,6 +29,9 @@ namespace GS.Point3DNina {
             // The assembled model is a German equatorial mount only: a saved fork mount (an old list entry) isn't one.
             if (Settings.Mount == AssemblyMount.Fork) Settings.Mount = Model3D.DefaultAssemblyMount;
             PickColorCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<object>(o => Color = (string)o);
+            SaveViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => SaveViewRequested?.Invoke());
+            ResetViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => Changed?.Invoke(ViewerChange.View));
+            ForgetViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand(() => StoreView(null));
         }
 
         public ViewerSettings Settings { get; }
@@ -183,6 +186,30 @@ namespace GS.Point3DNina {
         }
 
         public ICommand PickColorCommand { get; }
+
+        // ===== The view =====
+
+        /// <summary>Raised when the user asks to keep the camera as it is; the 3D Model panel answers with <see cref="StoreView"/>.</summary>
+        public event Action SaveViewRequested;
+
+        /// <summary>Keep the camera as it is now.</summary>
+        public ICommand SaveViewCommand { get; }
+
+        /// <summary>Move the camera back to the saved view, or the default one if none is saved.</summary>
+        public ICommand ResetViewCommand { get; }
+
+        /// <summary>Drop the saved view and return to the default one.</summary>
+        public ICommand ForgetViewCommand { get; }
+
+        public bool HasSavedView => Settings.Camera != null;
+
+        /// <summary>Keeps the camera (null forgets it, so the default view applies) and, for a forget, shows the default now.</summary>
+        public void StoreView(CameraView view) {
+            Settings.Camera = view;
+            Settings.Save();
+            RaisePropertyChanged(nameof(HasSavedView));
+            if (view == null) Changed?.Invoke(ViewerChange.View);
+        }
 
         private void Apply(ViewerChange change, string property) {
             Settings.Save();

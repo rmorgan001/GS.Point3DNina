@@ -29,6 +29,8 @@ namespace GS.Point3DNina.Views {
             if (vm == null) return;
             vm.Changed -= OnChanged;
             vm.Changed += OnChanged;
+            vm.Options.SaveViewRequested -= OnSaveView;
+            vm.Options.SaveViewRequested += OnSaveView;
             if (Web.CoreWebView2 != null) return; // already running: the panel was only moved
             try {
                 var data = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -49,7 +51,9 @@ namespace GS.Point3DNina.Views {
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e) {
-            if (vm != null) vm.Changed -= OnChanged;
+            if (vm == null) return;
+            vm.Changed -= OnChanged;
+            vm.Options.SaveViewRequested -= OnSaveView;
         }
 
         private void Send(object message) {
@@ -73,6 +77,7 @@ namespace GS.Point3DNina.Views {
                             cardinalSize = vm.CardinalSize.ToString().ToLowerInvariant(),
                             heading = vm.ShowHeading,
                             coordinates = vm.ShowCoordinates,
+                            camera = vm.Options.Settings.Camera,
                             theme = vm.Theme.ToString().ToLowerInvariant(),
                             northern = vm.UseNorthCompass,
                             secondaryColor = "#e8e6df"
@@ -86,6 +91,10 @@ namespace GS.Point3DNina.Views {
                     break;
                 case "modelLoaded":
                     SendPose();
+                    break;
+                case "camera":
+                    var view = doc.RootElement.GetProperty("view").Deserialize<GS.Point3DNina.Support.CameraView>(Json);
+                    if (view != null) vm.Options.StoreView(view);
                     break;
                 case "toggleRa":
                     vm.Options.RaInDegrees = !vm.Options.RaInDegrees;
@@ -103,6 +112,11 @@ namespace GS.Point3DNina.Views {
             loadedModelKey = key;
             Send(new { cmd = "setHemisphere", northern = vm.UseNorthCompass });
             Send(new { cmd = "loadModel", url = vm.ModelUrl, mount = vm.MountInfo });
+        }
+
+        // Asks the viewer for its camera; it answers with a "camera" event, which is kept.
+        private void OnSaveView() {
+            if (created) Send(new { cmd = "getCamera" });
         }
 
         private void SendCoordinates() {
@@ -123,6 +137,7 @@ namespace GS.Point3DNina.Views {
                 switch (change) {
                     case ViewerChange.Pose: SendPose(); SendCoordinates(); break;
                     case ViewerChange.Coordinates: SendCoordinates(); break;
+                    case ViewerChange.View: Send(new { cmd = "setCamera", view = vm.Options.Settings.Camera }); break;
                     case ViewerChange.Model: LoadModel(); SendCoordinates(); break;
                     case ViewerChange.Color: Send(new { cmd = "setModelColor", hex = vm.Color }); break;
                     case ViewerChange.Background: Send(new { cmd = "setBackground", background = vm.Background }); break;
