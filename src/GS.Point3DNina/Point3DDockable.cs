@@ -78,6 +78,7 @@ namespace GS.Point3DNina {
         public void UpdateDeviceInfo(TelescopeInfo deviceInfo) {
             var modeBefore = Mode;
             var latitudeBefore = Latitude;
+            var connectedBefore = Connected;
             info = deviceInfo;
             RaisePropertyChanged(nameof(Connected));
             RaisePropertyChanged(nameof(StatusText));
@@ -87,8 +88,14 @@ namespace GS.Point3DNina {
                 Changed?.Invoke(ViewerChange.Model);
                 return;
             }
-            // A polling time slower than NINA's: only every so often does the model follow the mount.
             var now = Environment.TickCount64;
+            // Connecting or disconnecting shows at once, whatever the polling time.
+            if (Connected != connectedBefore) {
+                lastPoseTick = now;
+                Changed?.Invoke(ViewerChange.Pose);
+                return;
+            }
+            // A polling time slower than NINA's: only every so often does the model follow the mount.
             var nina = NinaPollingSeconds;
             if (lastPoseTick != long.MinValue && !IsDue((now - lastPoseTick) / 1000.0, Settings.PollingSeconds, nina)) return;
             lastPoseTick = now;
@@ -219,7 +226,7 @@ namespace GS.Point3DNina {
             if (Settings.ShowAlt) items.Add(new { label = "Alt", value = Dms(c ? info.Altitude : 0), title = "", ra = false });
             if (Settings.ShowLha) items.Add(new {
                 label = "Lha",
-                value = c ? CoordinateFormat.HoursToHms(Coordinate.Ra2Ha12(info.RightAscension, info.SiderealTime)) : "--",
+                value = c ? CoordinateFormat.HoursToHms(Coordinate.Ra2Ha12(info.RightAscension, info.SiderealTime), "h ", ":", "", 2) : "--",
                 title = "Local hour angle", ra = false });
             if (Settings.ShowLst) items.Add(new {
                 label = "Lst",

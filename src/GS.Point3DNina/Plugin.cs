@@ -13,9 +13,9 @@ namespace GS.Point3DNina {
             return Task.CompletedTask;
         }
 
-        public override Task Teardown() {
-            Views.Point3DView.Shutdown();
-            return Task.CompletedTask;
+        public override async Task Teardown() {
+            Point3DOptions.Instance.Flush();
+            await Views.Point3DView.Shutdown();
         }
     }
 }

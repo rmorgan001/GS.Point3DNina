@@ -79,11 +79,14 @@ namespace GS.Point3DNina.Views {
         }
 
         /// <summary>Frees the viewer when the plugin is torn down.</summary>
-        internal static void Shutdown() {
+        internal static async Task Shutdown() {
             var view = active;
             if (view == null) return;
             active = null;
-            view.Dispatcher.Invoke(view.Retire);
+            if (view.Dispatcher.CheckAccess()) { view.Retire(); return; }
+            // Asynchronously: waiting for the UI thread from here could deadlock if it is waiting for the teardown.
+            try { await view.Dispatcher.InvokeAsync(view.Retire).Task; }
+            catch (TaskCanceledException) { /* the UI is already shutting down */ }
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e) {
@@ -179,6 +182,10 @@ namespace GS.Point3DNina.Views {
                     SendAll(); // options changed while the scene was being built
                     break;
                 case "modelLoaded":
+                    // The viewer reports a model it could not load as text rather than an error.
+                    if (doc.RootElement.TryGetProperty("result", out var loadResult) && loadResult.ValueKind == JsonValueKind.String
+                        && loadResult.GetString()!.StartsWith("Error", StringComparison.OrdinalIgnoreCase))
+                        NINA.Core.Utility.Logger.Warning($"GS.Point3DNina: the 3D model could not be loaded: {loadResult.GetString()}");
                     SendPose();
                     break;
                 case "camera":

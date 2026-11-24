@@ -34,52 +34,20 @@ namespace GS.Point3DNina.Shared
             switch (mode)
             {
                 case AlignmentModes.algAltAz:
-                    //axes = Range.RangeAzAlt(axes);
-                    //axes = Coordinate.RaDec2AltAz(axes[0], axes[1], SkyServer.SiderealTime, SkySettings.Latitude);
                     return axes;
                 case AlignmentModes.algGermanPolar:
                     axes[0] = (sideRealtime - axes[0]) * 15.0;
-                    if (southernHemisphere){axes[1] = -axes[1];}
-
-                    //Axis2 = axes[0];
-                    //Axis3 = axes[1];
-
-                    var axes3 = GetAltAxisPosition(axes);
-
-                    //Axis4 = axes3[0];
-                    //Axis5 = axes3[1];
+                    if (southernHemisphere) { axes[1] = -axes[1]; }
 
                     switch (pierSide)
                     {
-                        case -1: //SOP.pierUnknown:
+                        case -1: // SOP.pierUnknown
+                        case 0:  // SOP.pierEast: the axes as they are
                             break;
-                        case 0: //SOP.pierEast:
-                            if (southernHemisphere)
-                            {
-                                // southern
-                                axes[0] = axes[0];
-                                axes[1] = axes[1];
-                            }
-                            else
-                            {
-                                axes[0] = axes[0];
-                                axes[1] = axes[1];
-                            }
-
-                            break;
-                        case 1: //SOP.pierWest:
-                            if (southernHemisphere)
-                            {
-                                // southern
-                                axes[0] = axes3[0];
-                                axes[1] = axes3[1];
-                            }
-                            else
-                            {
-                                axes[0] = axes3[0];
-                                axes[1] = axes3[1];
-                            }
-
+                        case 1:  // SOP.pierWest: the other of the two axes positions
+                            var other = GetAltAxisPosition(axes);
+                            axes[0] = other[0];
+                            axes[1] = other[1];
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -87,8 +55,6 @@ namespace GS.Point3DNina.Shared
 
                     return axes;
                 case AlignmentModes.algPolar:
-                    //axes[0] = (SkyServer.SiderealTime - axes[0]) * 15.0;
-                    //axes[1] = (SkyServer.SouthernHemisphere) ? -axes[1] : axes[1];
                     break;
                 case AlignmentModes.algUnknown:
                     throw new ArgumentOutOfRangeException($"RaDecToAxesXy");

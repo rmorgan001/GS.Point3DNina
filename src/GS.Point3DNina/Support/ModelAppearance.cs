@@ -43,9 +43,6 @@ public static partial class ModelAppearance
     /// <summary>The North America nebula, the scene's original background.</summary>
     public const string DefaultBackground = "NorthAmerica";
 
-    /// <summary>The user's own picture (BackgroundImages), shown flat behind the scene.</summary>
-    public const string CustomBackground = "Custom";
-
     /// <summary>A star field the viewer draws itself (no image): a black sky with randomly placed stars.</summary>
     public const string StarFieldBackground = "Stars";
 
@@ -77,10 +74,6 @@ public static partial class ModelAppearance
     public static SceneBackground GetBackground(string? key)
         => Backgrounds.FirstOrDefault(b => string.Equals(b.Key, key, StringComparison.OrdinalIgnoreCase))
            ?? Backgrounds[0];
-
-    /// <summary>A saved background: one of the built-in ones, or the user's own picture.</summary>
-    public static string NormalizeBackground(string? key)
-        => string.Equals(key, CustomBackground, StringComparison.OrdinalIgnoreCase) ? CustomBackground : GetBackground(key).Key;
 
     /// <summary>A #rrggbb color, lower-cased; anything else falls back to the default green.</summary>
     public static string NormalizeColor(string? hex)

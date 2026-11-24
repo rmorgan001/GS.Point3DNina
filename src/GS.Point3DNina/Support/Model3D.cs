@@ -26,19 +26,6 @@ public enum PolarMode
     Right
 }
 
-/// <summary>How the coordinates show on the front of a 3D model card.</summary>
-public enum CoordinatesLayout
-{
-    /// <summary>One chip per coordinate along the top of the scene, the mount state along the bottom.</summary>
-    Individual,
-
-    /// <summary>One panel on an edge of the scene with every coordinate and, when connected, the mount state.</summary>
-    Grid,
-
-    /// <summary>No coordinates or mount state: only the Connect / Disconnect button, so the scene is left clear.</summary>
-    None
-}
-
 /// <summary>
 /// The colour theme of the 3D view's scene, as in Green Swamp's other apps (viewer.html sets data-theme from the lower-case
 /// name; model3d.js reads the palette). Night is red only and Dusk amber only, to keep dark adaptation.
@@ -109,15 +96,6 @@ public enum AssemblyOta
     MaksutovCassegrain
 }
 
-/// <summary>Which edge of the scene the coordinates grid sits on; the model moves into the space left over.</summary>
-public enum GridPosition
-{
-    Left,
-    Right,
-    Top,
-    Bottom
-}
-
 /// <summary>
 /// Telescope model files and model offsets. Ported from GSServer (GS.Shared/Model3D.cs and
 /// GS.Server/Model3D/Model3DVM.cs): the model file is the model type plus a suffix for the
@@ -138,14 +116,6 @@ public static class Model3D
     /// <summary>The whole-degree choices for the RA / Dec adjustment lists.</summary>
     public static IReadOnlyList<int> OffsetValues { get; } =
         [.. Enumerable.Range(MinOffset, MaxOffset - MinOffset + 1)];
-
-    /// <summary>
-    /// Default user offsets. These are adjustments on top of GSServer's offsets for the
-    /// alignment mode (<see cref="GetAxisModelOffsets"/>), so 0 means "as GSServer draws it".
-    /// </summary>
-    public const double DefaultRaOffset = 0;
-    public const double DefaultDecOffset = 0;
-
 
     /// <summary>The .obj files in wwwroot/model3d/models (same set as GSServer).</summary>
     private static readonly HashSet<string> ModelFiles = new(StringComparer.OrdinalIgnoreCase)
@@ -225,13 +195,6 @@ public static class Model3D
         AssemblyOta.MaksutovCassegrain => Model3DType.SchmidtCassegrain,
         _ => Model3DType.Reflector
     };
-
-    /// <summary>
-    /// The OTA for a server saved before the OTA was chosen on the card: its old Model's, or the refractor for the
-    /// default and dual-telescope models, which have no OTA of their own.
-    /// </summary>
-    public static AssemblyOta GetOtaFor(Model3DType modelType)
-        => Enum.TryParse<AssemblyOta>(modelType.ToString(), out var ota) ? ota : AssemblyOta.Refractor;
 
     public static string GetDisplayName(AssemblyOta ota) => ota switch
     {

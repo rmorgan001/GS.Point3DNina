@@ -2,6 +2,8 @@
   <!-- This is the single editable source of plugin identity and manifest metadata. -->
   <PropertyGroup>
     <PluginId>F885D3AF-B157-431C-A621-4E0595842D52</PluginId>
+    <!-- A release passes the version from its tag. Without one (a local build or deploy), the newest CHANGELOG.md entry. -->
+    <Version Condition="'$(Version)' == '' And Exists('$(MSBuildThisFileDirectory)CHANGELOG.md')">$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)CHANGELOG.md')), '(?m)^## (\d+\.\d+\.\d+\.\d+)').Groups[1].Value)</Version>
     <Version Condition="'$(Version)' == ''">1.0.0.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>

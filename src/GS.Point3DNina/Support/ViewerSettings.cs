@@ -115,6 +115,7 @@ public sealed class ViewerSettings
         if (!(PollingSeconds == 0 || (PollingSeconds is >= 3 and <= 10 && PollingSeconds == Math.Floor(PollingSeconds))))
             PollingSeconds = 0;
         Color = ModelAppearance.NormalizeColor(Color);
+        if (!CameraView.IsUsable(Camera)) Camera = null;
     }
 
     public void Save(string? path = null)

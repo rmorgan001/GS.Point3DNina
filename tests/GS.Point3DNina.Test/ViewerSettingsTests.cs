@@ -55,6 +55,23 @@ namespace GS.Point3DNina.Test {
             });
         }
 
+        [TestCase(1.0, 1.0, 5.0, true)]
+        [TestCase(1.0, 1.0, 0.0, false)]            // no zoom distance
+        [TestCase(1.0, 1.0, -3.0, false)]
+        [TestCase(double.NaN, 1.0, 5.0, false)]
+        [TestCase(1.0, double.PositiveInfinity, 5.0, false)]
+        public void OnlyACameraWithFiniteNumbersAndAZoomCanBeUsed(double alpha, double beta, double radius, bool usable)
+            => Assert.That(CameraView.IsUsable(new CameraView(alpha, beta, radius, 0, 0, 0)), Is.EqualTo(usable));
+
+        [Test]
+        public void ASavedCameraThatCannotBeUsedGivesTheDefaultView() {
+            Assert.Multiple(() => {
+                Assert.That(CameraView.IsUsable(null), Is.False);
+                Assert.That(ViewerSettings.Parse("{\"Camera\":{\"Alpha\":1,\"Beta\":2}}").Camera, Is.Null, "no zoom distance");
+                Assert.That(ViewerSettings.Parse("{\"Camera\":{\"Alpha\":1,\"Beta\":2,\"Radius\":-4}}").Camera, Is.Null);
+            });
+        }
+
         [Test]
         public void SavingLeavesNoTemporaryFileBehind() {
             var dir = Path.Combine(Path.GetTempPath(), "gs-point3d-test-" + Guid.NewGuid().ToString("N"));
@@ -112,8 +129,8 @@ namespace GS.Point3DNina.Test {
 
         [Test]
         public void ASavedViewIsRead() {
-            var s = ViewerSettings.Parse("{\"Camera\":{\"alpha\":1,\"beta\":2,\"radius\":3,\"targetX\":4,\"targetY\":5,\"targetZ\":6}}");
-            Assert.That(s.Camera, Is.Not.Null);
+            var s = ViewerSettings.Parse("{\"Camera\":{\"Alpha\":1,\"Beta\":2,\"Radius\":3,\"TargetX\":4,\"TargetY\":5,\"TargetZ\":6}}");
+            Assert.That(s.Camera, Is.EqualTo(new CameraView(1, 2, 3, 4, 5, 6)));
         }
     }
 }

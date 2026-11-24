@@ -28,4 +28,15 @@ public sealed record CameraView(
     double Radius,
     double TargetX,
     double TargetY,
-    double TargetZ);
+    double TargetZ)
+{
+    /// <summary>
+    /// Whether a camera can be used: every number is finite and the zoom distance is above zero. Anything else (a
+    /// hand-edited file, a damaged report) would give an unusable view, so the default view applies instead.
+    /// </summary>
+    public static bool IsUsable(CameraView? view)
+        => view is not null
+           && double.IsFinite(view.Alpha) && double.IsFinite(view.Beta)
+           && double.IsFinite(view.TargetX) && double.IsFinite(view.TargetY) && double.IsFinite(view.TargetZ)
+           && double.IsFinite(view.Radius) && view.Radius > 0;
+}

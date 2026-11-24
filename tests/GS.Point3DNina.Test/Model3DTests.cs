@@ -207,16 +207,6 @@ namespace GS.Point3DNina.Test {
             });
         }
 
-        [Test]
-        public void AnOldModelTypeMapsToItsOtaAndTheModelsWithoutOneToTheRefractor() {
-            Assert.Multiple(() => {
-                Assert.That(Model3D.GetOtaFor(Model3DType.Reflector), Is.EqualTo(AssemblyOta.Reflector));
-                Assert.That(Model3D.GetOtaFor(Model3DType.SchmidtCassegrain), Is.EqualTo(AssemblyOta.SchmidtCassegrain));
-                Assert.That(Model3D.GetOtaFor(Model3DType.Default), Is.EqualTo(AssemblyOta.Refractor));
-                Assert.That(Model3D.GetOtaFor(Model3DType.DualTelescope), Is.EqualTo(AssemblyOta.Refractor));
-            });
-        }
-
         [TestCase("Tripod", AssemblySupport.MediumTripod)]
         [TestCase("Pier", AssemblySupport.MediumPier)]
         [TestCase("Pier10", AssemblySupport.MediumPier)]
@@ -266,16 +256,6 @@ namespace GS.Point3DNina.Test {
                 Assert.That(ModelAppearance.GetBackground("nonsense").Key, Is.EqualTo(ModelAppearance.DefaultBackground));
                 Assert.That(ModelAppearance.GetBackground("heart").Key, Is.EqualTo("Heart"));
                 Assert.That(ModelAppearance.GetBackground("STARS").Key, Is.EqualTo(ModelAppearance.StarFieldBackground));
-            });
-        }
-
-        [Test]
-        public void NormalizeBackgroundKeepsTheCustomPictureAndFixesEverythingElse() {
-            Assert.Multiple(() => {
-                Assert.That(ModelAppearance.NormalizeBackground("custom"), Is.EqualTo(ModelAppearance.CustomBackground));
-                Assert.That(ModelAppearance.NormalizeBackground("m51"), Is.EqualTo("M51"));
-                Assert.That(ModelAppearance.NormalizeBackground(null), Is.EqualTo(ModelAppearance.DefaultBackground));
-                Assert.That(ModelAppearance.NormalizeBackground("bogus"), Is.EqualTo(ModelAppearance.DefaultBackground));
             });
         }
 

@@ -128,56 +128,6 @@ namespace GS.Point3DNina.Shared
             return new [] {p, l};
         }
 
-        ///// <summary>
-        ///// Hour Angles and Declination to Azimuth
-        ///// Adopted from AsCom
-        ///// </summary>
-        ///// <param name="hourAngle">In Decimal Hours</param>
-        ///// <param name="declination">In decimal degrees</param>
-        ///// <param name="latitude">In decimal degrees</param>
-        ///// <returns>Azimuth in decimal degrees</returns>
-        //public static double HaDec2Azm(double hourAngle, double declination, double latitude)
-        //{
-        //    var a = Units.Hrs2Rad(hourAngle);
-        //    var b = Units.Deg2Rad(declination);
-        //    var c = Units.Deg2Rad(latitude);
-        //    var d = Math.Sin(a);
-        //    var e = Math.Cos(a);
-        //    var f = Math.Sin(b);
-        //    var g = Math.Cos(b);
-        //    var h = Math.Sin(c);
-        //    var i = Math.Cos(c);
-        //    var j = f * i - e * g * h;
-        //    var k = -(d * g);
-        //    var n = Units.Rad2Deg(Math.Atan2(k, j));
-        //    var haDec2Azm = Range.Range360(n);
-        //    return haDec2Azm;
-        //}
-
-        ///// <summary>
-        ///// Hour Angles and Declination to Altitude
-        ///// Adopted from AsCom
-        ///// </summary>
-        ///// <param name="hourAngle">In Decimal Hours</param>
-        ///// <param name="declination">In decimal degrees</param>
-        ///// <param name="latitude">In decimal degrees</param>
-        ///// <returns>Altitude in decimal degrees</returns>
-        //public static double HaDec2Alt(double hourAngle, double declination, double latitude)
-        //{
-        //    var a = Units.Hrs2Rad(hourAngle);
-        //    var b = Units.Deg2Rad(declination);
-        //    var c = Units.Deg2Rad(latitude);
-        //    //var d = Math.Sin(a);
-        //    var e = Math.Cos(a);
-        //    var f = Math.Sin(b);
-        //    var g = Math.Cos(b);
-        //    var h = Math.Sin(c);
-        //    var i = Math.Cos(c);
-        //    var j = f * h + g * i * e;
-        //    var haDec2Alt = Units.Rad2Deg(Math.Asin(j));
-        //    return haDec2Alt;
-        //}
-
         /// <summary>
         /// Azimuth and Altitude to Right Ascension and Declination
         /// Adopted from AsCom

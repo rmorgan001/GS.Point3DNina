@@ -26,6 +26,7 @@ namespace GS.Point3DNina {
 
         private Point3DOptions() {
             Settings = ViewerSettings.Load();
+            saveTimer = new System.Threading.Timer(_ => Flush(), null, System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             // The assembled model is a German equatorial mount only: a saved fork mount (an old list entry) isn't one.
             if (Settings.Mount == AssemblyMount.Fork) Settings.Mount = Model3D.DefaultAssemblyMount;
             PickColorCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<object>(o => Color = (string)o);
@@ -35,6 +36,21 @@ namespace GS.Point3DNina {
         }
 
         public ViewerSettings Settings { get; }
+
+        // Changes are written a moment after the last one, so stepping through a list doesn't write the file each time.
+        private readonly System.Threading.Timer saveTimer;
+        private int savePending;
+        private const int SaveDelayMs = 300;
+
+        private void ScheduleSave() {
+            System.Threading.Volatile.Write(ref savePending, 1);
+            saveTimer.Change(SaveDelayMs, System.Threading.Timeout.Infinite);
+        }
+
+        /// <summary>Writes any change not yet saved (called when the plugin shuts down).</summary>
+        public void Flush() {
+            if (System.Threading.Interlocked.Exchange(ref savePending, 0) == 1) Settings.Save();
+        }
 
         /// <summary>Raised on any change that needs the scene updated.</summary>
         public event Action<ViewerChange> Changed;
@@ -96,8 +112,14 @@ namespace GS.Point3DNina {
         public AssemblyMount Mount {
             get => Settings.Mount;
             set {
+                // The new mount's usual support and OTA, unless they were changed from the previous mount's.
+                var previous = Model3D.GetSuggestedParts(Settings.Mount);
+                var suggested = Model3D.GetSuggestedParts(value);
+                var keepSupport = Settings.Support != previous.Support;
+                var keepOta = Settings.Ota != previous.Ota;
                 Settings.Mount = value;
-                (Settings.Support, Settings.Ota) = Model3D.GetSuggestedParts(value);
+                if (!keepSupport) Settings.Support = suggested.Support;
+                if (!keepOta) Settings.Ota = suggested.Ota;
                 RaisePropertyChanged(nameof(Support));
                 RaisePropertyChanged(nameof(Ota));
                 Apply(ViewerChange.Model, nameof(Mount));
@@ -212,6 +234,10 @@ namespace GS.Point3DNina {
 
         /// <summary>Keeps the camera (null forgets it, so the default view applies) and, for a forget, shows the default now.</summary>
         public void StoreView(CameraView view) {
+            if (view != null && !CameraView.IsUsable(view)) {
+                Logger.Warning("GS.Point3DNina: the 3D viewer reported a camera that can't be used, so the view was not saved.");
+                return;
+            }
             Settings.Camera = view;
             Settings.Save();
             RaisePropertyChanged(nameof(HasSavedView));
@@ -219,7 +245,7 @@ namespace GS.Point3DNina {
         }
 
         private void Apply(ViewerChange change, string property) {
-            Settings.Save();
+            ScheduleSave();
             RaisePropertyChanged(property);
             Changed?.Invoke(change);
         }
