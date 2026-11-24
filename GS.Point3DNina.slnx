@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="src/GS_Point3DNina/GS_Point3DNina.csproj" />
-  <Project Path="tests/GS_Point3DNina.Tests/GS_Point3DNina.Tests.csproj" />
+  <Project Path="src/GS.Point3DNina/GS.Point3DNina.csproj" />
+  <Project Path="tests/GS.Point3DNina.Test/GS.Point3DNina.Test.csproj" />
 </Solution>

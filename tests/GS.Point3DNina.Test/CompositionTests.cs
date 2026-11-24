@@ -12,7 +12,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Reflection;
 using System.Windows;
 
-namespace GS.Point3DNina.Tests {
+namespace GS.Point3DNina.Test {
     [NonParallelizable, Apartment(ApartmentState.STA)]
     public class CompositionTests {
         private static CompositionContainer Create(Mock<ITelescopeMediator> telescope) {

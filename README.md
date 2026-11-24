@@ -1,38 +1,98 @@
+<div align="center">
+
+[![Green Swamp Software](assets/moon-half.jpg)](http://www.greenswamp.org/)
+
 # GS.Point3DNina
 
-A plugin for NINA 3.3.0.1060 or later, targeting .NET 10. Metadata lives in Plugin.props. The plugin GUID is permanent.
+**A live 3D view of your telescope mount, right inside [NINA](https://nighttime-imaging.eu/).**
 
-## Develop
+[![Build](https://github.com/rmorgan001/GS.Point3DNina/actions/workflows/build.yml/badge.svg)](https://github.com/rmorgan001/GS.Point3DNina/actions/workflows/build.yml)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE.txt)
+[![NINA](https://img.shields.io/badge/NINA-3.3.0.1060%2B-informational.svg)](https://nighttime-imaging.eu/)
+[![.NET](https://img.shields.io/badge/.NET-10-512bd4.svg)](https://dotnet.microsoft.com/)
 
-Install the .NET 10.0.4xx SDK and PowerShell 7 on Windows. Open GS.Point3DNina.slnx in a compatible Visual Studio 2026 installation or use the CLI.
+</div>
+
+GS.Point3DNina adds a **3D Model** panel to NINA's Imaging tab. It draws your telescope, mount and support in a real-time 3D scene and moves the model as NINA reports where the mount is pointing. At a glance you can see what the mount is doing, which side of the pier it is on, and whether the tube is about to swing into the tripod.
+
+The scene is the same viewer used by Green Swamp Software's Point3D for GS Server, brought into NINA as a dockable panel.
+
+## Features
+
+- **Follows your mount.** The model turns with the RA and Dec axes of a German equatorial mount. It uses the mount's site latitude, so pier tilt and compass match your location in either hemisphere.
+- **Build your rig from parts.**
+  - *Mount:* Sky-Watcher EQ6-R Pro, HEQ5 Pro, EQ8-R Pro, CQ350 Pro, EQM-35 Pro and Wave 150i Pro, ZWO AM5, iOptron CEM40 and CEM70.
+  - *Support:* a tripod or pier in several sizes.
+  - *Telescope:* refractor, reflector, Schmidt-Cassegrain, Ritchey-Chretien (solid or truss), Newtonian or Maksutov-Cassegrain, scaled from 50% to 200% of the mount's own size.
+- **Ready-made models.** Turn the assembled model off to use simpler telescope models, including Alt-Az and polar (fork) mounts as well as German polar.
+- **Your look.** Choose the model colour, a background (nebulae and galaxies, a generated star field, or a plain dark sky), a ground grid, and N/E/S/W letters in four sizes.
+- **Fine adjustment.** RA and Dec offsets of up to 90 degrees line the model up with how your own mount is set up.
+- **Remembered settings.** Changes show in the panel straight away and persist between sessions.
+
+## Requirements
+
+- Windows
+- NINA 3.3.0.1060 or later
+
+## Usage
+
+1. Open NINA's **Imaging** tab and add the **3D Model** panel from the panel list.
+2. Connect your telescope under **Equipment, Mount**. The status line under the model shows which mount is connected.
+3. Open **Options, Plugins**, select GS.Point3DNina, and choose the mount, support, telescope, colour and background you like.
+
+With no telescope connected the model sits in its home position, so you can set up the look before you head out.
+
+## Development
+
+### Prerequisites
+
+- .NET 10.0.4xx SDK (see `global.json`)
+- PowerShell 7
+- Visual Studio 2026 (optional): open `GS.Point3DNina.slnx`
+
+### Build and test
 
 ```powershell
 dotnet build
+dotnet test
 ```
 
-Run `dotnet test` for metadata, composition and selected feature tests. WPF tests use STA and isolated host data under their output directory.
+Tests cover metadata, composition and selected feature behaviour. WPF tests run on an STA thread with isolated host data under their output directory.
 
-Copy local.props.example to the ignored local.props and set NinaExecutable to your NINA installation. Close NINA before running the DeployPlugin target on the project under src. Normal builds do not deploy.
+### Deploy to a local NINA
 
-## Selected examples
+1. Copy `local.props.example` to `local.props` (git-ignored) and set `NinaExecutable` to your NINA install. Set `PluginDeployDirectory` to use a separate test installation.
+2. Close NINA.
+3. Run the `DeployPlugin` target on the project under `src`.
 
-This project starts with the manifest and lifecycle skeleton. Generate a scratch project with feature switches to try the examples.
+Normal builds never deploy.
 
-## Package
+### Project layout
 
-Set your real title, author, description and repository in Plugin.props. Add plugin-owned dependencies and assets to PluginPackageFile in build/Plugin.targets. Do not include NINA assemblies.
+| Path | Contents |
+| --- | --- |
+| `src/GS.Point3DNina` | The plugin: lifecycle (`Plugin.cs`), dockable panel, options, WPF views and the bundled Babylon.js viewer, models and backgrounds under `Assets/` |
+| `tests/GS.Point3DNina.Test` | Metadata, composition and plugin tests |
+| `build/` | Packaging targets and `Build-Release.ps1` |
+| `Plugin.props` | Plugin identity and manifest metadata. The plugin GUID is permanent, so never change it. |
+| `assets/` | Icon and images used by the plugin listing |
+
+### Package a release
 
 ```powershell
-./build/Build-Release.ps1 -Tag v1.0.0.0 -Repository you/your-plugin
+./build/Build-Release.ps1 -Tag v1.0.0.0 -Repository rmorgan001/GS.Point3DNina
 ```
 
-This builds, tests and packages without uploading. ZIP and manifest files go to artifacts/release. Plugin versions have four numeric components.
+This builds, tests and packages without uploading. The ZIP and manifest are written to `artifacts/release`. Versions have four numeric components, each from 0 to 65534. Do not include NINA assemblies in the package.
 
+Pushing a tag such as `v1.0.1.0` runs the Release workflow, which builds, tests, packages and publishes the release. The tag becomes the plugin version.
 
-## Learn more
+See the [NINA plugin developer handbook](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/README.md) for [publishing](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/publishing.md) and [testing and debugging](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/testing-and-debugging.md).
 
-Read the [NINA plugin developer handbook](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/README.md), particularly [publishing](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/publishing.md), [testing/debugging](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/testing-and-debugging.md) and [adding examples later](https://github.com/isbeorn/nina.plugin.template/blob/master/docs/getting-started.md#add-another-example-later).
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-GS.Point3DNina is free software, released under the [GNU General Public License v3.0](LICENSE.txt). It is part of [Green Swamp Software](http://www.greenswamp.org/).
+GS.Point3DNina is free software, released under the [GNU General Public License v3.0](LICENSE.txt). It is part of [Green Swamp Software](http://www.greenswamp.org/), which makes astronomy tools for telescope owners, including GS Server and the Point3D 3D mount views. Visit [greenswamp.org](http://www.greenswamp.org/) for downloads, guides and screenshots.

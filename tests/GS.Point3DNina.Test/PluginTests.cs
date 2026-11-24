@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace GS.Point3DNina.Tests {
+namespace GS.Point3DNina.Test {
     public class PluginTests {
         [Test]
         public void ManifestHasValidIdentityAndHostBaseline() {

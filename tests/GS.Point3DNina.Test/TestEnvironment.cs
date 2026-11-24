@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.IO;
 using System.Windows;
 
-namespace GS.Point3DNina.Tests {
+namespace GS.Point3DNina.Test {
     [SetUpFixture]
     public class TestEnvironment {
         private string previousRoot;

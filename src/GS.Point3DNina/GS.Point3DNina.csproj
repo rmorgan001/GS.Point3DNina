@@ -2,7 +2,7 @@
   <Import Project="../../Plugin.props" />
   <PropertyGroup>
     <RootNamespace>GS.Point3DNina</RootNamespace>
-    <AssemblyName>GS_Point3DNina</AssemblyName>
+    <AssemblyName>GS.Point3DNina</AssemblyName>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
