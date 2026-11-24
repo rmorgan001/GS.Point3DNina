@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.6.0
 
 - A message from the 3D viewer that cannot be handled is now logged instead of reaching NINA.
 - One unusable value in the settings file no longer resets all your settings; only that setting returns to its default.
