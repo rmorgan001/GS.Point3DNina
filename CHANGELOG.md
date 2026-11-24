@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.7.0
+
+- Every option on the plugin's settings page now has a tooltip explaining what it does.
+
 ## 1.0.6.0
 
 - A message from the 3D viewer that cannot be handled is now logged instead of reaching NINA.
