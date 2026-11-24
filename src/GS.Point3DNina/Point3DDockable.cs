@@ -142,6 +142,17 @@ namespace GS.Point3DNina {
         public string Color => Settings.Color;
         public ViewerTheme Theme => Settings.Theme;
         public bool ShowGrid => Settings.ShowGrid;
+
+        /// <summary>
+        /// The longest the model may glide to a new position, in milliseconds: NINA only reports the mount every
+        /// "device polling interval" (2 s by default), so a glide that ended sooner would leave the model standing still
+        /// between updates. Half as long again as the interval covers the jitter in when the updates arrive.
+        /// </summary>
+        public double MaxGlideMs => GlideMs(profileService.ActiveProfile.ApplicationSettings.DevicePollingInterval);
+
+        /// <summary>The glide length for a polling interval in seconds, kept between one and ten seconds.</summary>
+        public static double GlideMs(double pollingIntervalSeconds)
+            => double.IsFinite(pollingIntervalSeconds) ? Math.Clamp(pollingIntervalSeconds * 1500.0, 1000.0, 10000.0) : 1000.0;
         public bool ShowCoordinates => Settings.ShowCoordinates;
 
         /// <summary>The coordinate chips to show, in order, with the mount's values (dashes while it isn't connected).</summary>

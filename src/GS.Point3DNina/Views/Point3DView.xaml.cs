@@ -132,6 +132,7 @@ namespace GS.Point3DNina.Views {
                             cardinalSize = vm.CardinalSize.ToString().ToLowerInvariant(),
                             heading = vm.ShowHeading,
                             coordinates = vm.ShowCoordinates,
+                            maxGlideMs = vm.MaxGlideMs,
                             camera = vm.Options.Settings.Camera,
                             theme = vm.Theme.ToString().ToLowerInvariant(),
                             northern = vm.UseNorthCompass,
