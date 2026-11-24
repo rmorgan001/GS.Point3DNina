@@ -130,6 +130,7 @@ A release is offered in NINA's plugin manager once its manifest is accepted into
 2. Copy the release's manifest into your fork under `manifests/g/GS.Point3DNina/3.0.0/`, named `manifest.<version>.json`. Follow the layout of the existing entries, and use the file from the release as it is: the checksum in it is for that exact zip, so do not rebuild or edit it.
 3. In the fork, run `npm install` and then `node gather.js`. The log should show the manifest as valid.
 4. Open a pull request. Be ready to answer review comments.
+   The description used for 1.1.0.0 is kept in [`docs/nina-manifest-pr-1.1.0.0.md`](docs/nina-manifest-pr-1.1.0.0.md) as a starting point: copy it, then update the version, release URL, checksum and test notes.
 
 The repository expects an open-source licence (this plugin is GPL-3.0) and an accountable human maintainer, and it asks that any material use of AI in the code is disclosed. For a beta, add `"Channel": "Beta"` to the manifest; users then need the beta repository URL in NINA (Options, General, Plugin Repositories).
 
