@@ -33,8 +33,13 @@ public sealed class ViewerSettings
     public bool ShowLst { get; set; } = true;
     /// <summary>RA shown in degrees instead of hours (double-click the RA chip to switch).</summary>
     public bool RaInDegrees { get; set; }
+    /// <summary>
+    /// How often, in seconds, the model follows the mount. 0 matches NINA's Device polling interval; a larger value
+    /// is slower than NINA (NINA can't be asked for updates faster than its own interval).
+    /// </summary>
+    public double PollingSeconds { get; set; }
     public bool ShowCardinals { get; set; } = true;
-    /// <summary>The compass readout over the scene: a needle pointing north and the bearing the camera faces. Click it to face north.</summary>
+    /// <summary>The compass readout over the scene: a needle pointing north and the bearing the camera faces. Click it to face the pole (north, or south at a southern latitude).</summary>
     public bool ShowHeading { get; set; }
     public CardinalSize CardinalSize { get; set; } = CardinalSize.Medium;
     public int RaOffset { get; set; }

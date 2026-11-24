@@ -27,9 +27,10 @@ The scene is the same viewer used by Green Swamp Software's Point3D for GS Serve
 - **Ready-made models.** Turn the assembled model off to use simpler telescope models, including Alt-Az and polar (fork) mounts as well as German polar. The assembled model is always drawn as a German equatorial mount, so turn it off for an Alt-Az or fork mount.
 - **Your look.** Choose the model colour, a background (nebulae and galaxies, a generated star field, or a plain dark sky), a ground grid, and N/E/S/W letters in four sizes.
 - **Colour themes.** Dark, Day, Dusk or Night. Dusk is amber only and Night is red only, so the view keeps your eyes dark adapted at the telescope.
-- **Compass heading.** An optional readout in the corner of the view with a needle pointing north and the bearing the camera faces. Click it to turn the view to face north. It is off by default.
+- **Compass heading.** An optional readout in the corner of the view with a needle pointing north and the bearing the camera faces. Click it to turn the view to face the pole: north, or south when your latitude is south. It is off by default.
 - **Coordinates.** Chips along the top of the view show the mount's RA, Dec, Az, Alt, local hour angle and local sidereal time. Choose which ones show, and double-click RA to switch between hours and degrees.
 - **Save and reset the view.** Orbit, zoom and pan to the angle you like, then use Save view on the Options page to keep it for next time. Reset view returns to it, and Use default goes back to the standard view.
+- **Polling time.** How often the model follows the mount. The default, Match NINA, follows every report NINA makes (its Device polling interval). Choose a slower time (3 seconds to 1 minute) to update the model less often; it can never be faster than NINA's own interval. The model glides across the whole time, so it still moves smoothly.
 - **Fine adjustment.** RA and Dec offsets of up to 90 degrees line the model up with how your own mount is set up.
 - **Remembered settings.** Changes made on the Options page show in the 3D Model panel straight away, even while you are on another NINA tab, and persist between sessions.
 
@@ -48,7 +49,7 @@ With no telescope connected the model sits in its home position, so you can set 
 
 ### Smooth movement and lag
 
-NINA reports the mount's position once per **Device polling interval** (Options, General). The model glides from one reported position to the next over about one and a half polling intervals, so it moves smoothly but trails the real mount by about one interval. For a closer match, lower the polling interval in NINA. The glide length is read when the panel starts, so restart NINA after changing it.
+NINA reports the mount's position once per **Device polling interval** (Options, General). The model glides from one reported position to the next over about one and a half polling intervals, so it moves smoothly but trails the real mount by about one interval. For a closer match, lower the polling interval in NINA. To follow the mount less often than NINA reports it, set the plugin's Polling time option to a slower time. The glide length follows the setting each time the panel is shown, so after changing it just switch to the Imaging tab again.
 
 ## Development
 

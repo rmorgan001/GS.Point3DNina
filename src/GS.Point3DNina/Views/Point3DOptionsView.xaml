@@ -59,7 +59,7 @@
             <StackPanel Orientation="Horizontal" Margin="0,2,12,2"><CheckBox IsChecked="{Binding RaInDegrees}" /><TextBlock Text="RA in degrees" Style="{StaticResource Label}" Margin="6,0,0,0" /></StackPanel>
         </WrapPanel>
         <StackPanel Orientation="Horizontal" Margin="0,2,0,6"
-                    ToolTip="A compass in the corner of the view showing which way the camera faces. Click it to turn the view to face north.">
+                    ToolTip="A compass in the corner of the view showing which way the camera faces. Click it to turn the view to face the pole: north, or south at a southern latitude.">
             <CheckBox IsChecked="{Binding ShowHeading}" />
             <TextBlock Text="Compass heading" Style="{StaticResource Label}" Margin="6,0,0,0" />
         </StackPanel>
@@ -162,6 +162,14 @@
             <TextBlock Text="N E S W size" Style="{StaticResource Label}" />
             <ComboBox Grid.Column="1" ItemsSource="{Binding CardinalSizes}" SelectedItem="{Binding CardinalSize}"
                       IsEnabled="{Binding ShowCardinals}" />
+        </Grid>
+        <Grid Style="{StaticResource Row}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="L" /><ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Polling time" Style="{StaticResource Label}" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding PollingTimes}" SelectedValuePath="Value" DisplayMemberPath="Name" SelectedValue="{Binding PollingSeconds}"
+                      ToolTip="How often the model follows the mount. Match NINA uses NINA's Device polling interval (Options, General). A slower time updates the model less often; it can't be faster than NINA's interval." />
         </Grid>
         <Grid Style="{StaticResource Row}">
             <Grid.ColumnDefinitions>

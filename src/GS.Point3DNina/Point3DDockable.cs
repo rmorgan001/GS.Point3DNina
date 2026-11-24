@@ -73,6 +73,8 @@ namespace GS.Point3DNina {
             ? info.SiteLatitude
             : profileService.ActiveProfile.AstrometrySettings.Latitude;
 
+        private long lastPoseTick = long.MinValue;
+
         public void UpdateDeviceInfo(TelescopeInfo deviceInfo) {
             var modeBefore = Mode;
             var latitudeBefore = Latitude;
@@ -80,7 +82,37 @@ namespace GS.Point3DNina {
             RaisePropertyChanged(nameof(Connected));
             RaisePropertyChanged(nameof(StatusText));
             // A new mode or latitude means a different pier and tilt: the model loads again.
-            Changed?.Invoke(Mode != modeBefore || Latitude != latitudeBefore ? ViewerChange.Model : ViewerChange.Pose);
+            if (Mode != modeBefore || Latitude != latitudeBefore) {
+                lastPoseTick = Environment.TickCount64;
+                Changed?.Invoke(ViewerChange.Model);
+                return;
+            }
+            // A polling time slower than NINA's: only every so often does the model follow the mount.
+            var now = Environment.TickCount64;
+            var nina = NinaPollingSeconds;
+            if (lastPoseTick != long.MinValue && !IsDue((now - lastPoseTick) / 1000.0, Settings.PollingSeconds, nina)) return;
+            lastPoseTick = now;
+            Changed?.Invoke(ViewerChange.Pose);
+        }
+
+        /// <summary>NINA's Device polling interval, in seconds.</summary>
+        private double NinaPollingSeconds => profileService.ActiveProfile.ApplicationSettings.DevicePollingInterval;
+
+        /// <summary>
+        /// How often the model follows the mount, in seconds: NINA's interval when the polling time is 0 ("match NINA")
+        /// or shorter than it (NINA reports no faster), else the polling time.
+        /// </summary>
+        public static double EffectiveIntervalSeconds(double pollingSeconds, double ninaSeconds)
+            => Math.Max(double.IsFinite(ninaSeconds) ? ninaSeconds : 0, double.IsFinite(pollingSeconds) ? pollingSeconds : 0);
+
+        /// <summary>
+        /// Whether a report from NINA, this long after the one last followed, is due. NINA's reports jitter, so one
+        /// arriving up to half its interval early still counts.
+        /// </summary>
+        public static bool IsDue(double secondsSinceLast, double pollingSeconds, double ninaSeconds) {
+            var nina = double.IsFinite(ninaSeconds) ? ninaSeconds : 0;
+            if (!(pollingSeconds > nina)) return true; // matching NINA: every report
+            return secondsSinceLast >= pollingSeconds - nina / 2;
         }
 
         public string StatusText => Connected
@@ -141,6 +173,11 @@ namespace GS.Point3DNina {
                 : null
         };
 
+        /// <summary>The bearing a click on the compass readout turns the view to: north (0), or south (180) at a southern latitude.</summary>
+        public static double FaceBearingFor(double latitude) => latitude < 0 ? 180.0 : 0.0;
+
+        public double FaceBearing => FaceBearingFor(Latitude);
+
         public bool UseNorthCompass => Model3D.UseNorthCompass(Mode, Latitude);
 
         public string Color => Settings.Color;
@@ -152,7 +189,7 @@ namespace GS.Point3DNina {
         /// "device polling interval" (2 s by default), so a glide that ended sooner would leave the model standing still
         /// between updates. Half as long again as the interval covers the jitter in when the updates arrive.
         /// </summary>
-        public double MaxGlideMs => GlideMs(profileService.ActiveProfile.ApplicationSettings.DevicePollingInterval);
+        public double MaxGlideMs => GlideMs(EffectiveIntervalSeconds(Settings.PollingSeconds, NinaPollingSeconds));
 
         /// <summary>The glide length for a polling interval in seconds, kept between one and ten seconds.</summary>
         public static double GlideMs(double pollingIntervalSeconds)

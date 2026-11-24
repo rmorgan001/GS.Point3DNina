@@ -57,7 +57,7 @@ namespace GS.Point3DNina.Test {
             var file = Path.Combine(dir, "nested", "settings.json");
             try {
                 new ViewerSettings {
-                    Theme = ViewerTheme.Dusk, ShowGrid = false, ShowHeading = true, RaOffset = -12,
+                    Theme = ViewerTheme.Dusk, PollingSeconds = 10, ShowGrid = false, ShowHeading = true, RaOffset = -12,
                     Support = AssemblySupport.LargePier, ModeOverride = AlignmentModes.algAltAz,
                     Camera = new CameraView(1, 2, 3, 4, 5, 6)
                 }.Save(file);
@@ -65,6 +65,7 @@ namespace GS.Point3DNina.Test {
                 Assert.Multiple(() => {
                     Assert.That(s.Theme, Is.EqualTo(ViewerTheme.Dusk));
                     Assert.That(s.ShowGrid, Is.False);
+                    Assert.That(s.PollingSeconds, Is.EqualTo(10));
                     Assert.That(s.ShowHeading, Is.True);
                     Assert.That(s.RaOffset, Is.EqualTo(-12));
                     Assert.That(s.Support, Is.EqualTo(AssemblySupport.LargePier));

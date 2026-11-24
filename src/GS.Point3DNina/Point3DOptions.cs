@@ -6,7 +6,7 @@ using System.Windows.Input;
 namespace GS.Point3DNina {
 
     /// <summary>What changed, so the view updates only that part of the scene.</summary>
-    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme, Coordinates, View }
+    public enum ViewerChange { Pose, Model, Color, Background, Grid, Cardinals, Heading, Theme, Coordinates, View, Timing }
 
     /// <summary>One entry of the alignment mode list.</summary>
     public record ModeChoice(AlignmentModes? Mode, string Name);
@@ -52,6 +52,10 @@ namespace GS.Point3DNina {
         public IReadOnlyList<int> Offsets { get; } = Model3D.OffsetValues;
         public IReadOnlyList<SceneBackground> Backgrounds { get; } = ModelAppearance.Backgrounds;
         public IReadOnlyList<ModelColorPreset> Colors { get; } = ModelAppearance.ColorPresets;
+        /// <summary>The polling times offered: 0 matches NINA, the others are slower than it.</summary>
+        public IReadOnlyList<Choice<double>> PollingTimes { get; } = [
+            new(0, "Match NINA"), new(3, "3 seconds"), new(5, "5 seconds"), new(10, "10 seconds"),
+            new(15, "15 seconds"), new(30, "30 seconds"), new(60, "1 minute")];
         public IReadOnlyList<ViewerTheme> Themes { get; } = [.. Enum.GetValues<ViewerTheme>()];
         public IReadOnlyList<CardinalSize> CardinalSizes { get; } = [.. Enum.GetValues<CardinalSize>()];
         public IReadOnlyList<PolarMode> PolarModes { get; } = [.. Enum.GetValues<PolarMode>()];
@@ -159,6 +163,10 @@ namespace GS.Point3DNina {
         public ViewerTheme Theme {
             get => Settings.Theme;
             set { Settings.Theme = value; Apply(ViewerChange.Theme, nameof(Theme)); }
+        }
+        public double PollingSeconds {
+            get => Settings.PollingSeconds;
+            set { Settings.PollingSeconds = value; Apply(ViewerChange.Timing, nameof(PollingSeconds)); }
         }
         public bool ShowGrid {
             get => Settings.ShowGrid;

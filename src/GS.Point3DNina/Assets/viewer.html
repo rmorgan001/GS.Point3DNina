@@ -73,8 +73,8 @@
 <body>
 <canvas id="c"></canvas>
 <button type="button" id="heading" hidden
-        title="Which way the camera is facing (compass bearing); the red tip points north. Click to turn the view to face north."
-        aria-label="Which way the camera is facing (compass bearing); the red tip points north. Click to turn the view to face north.">
+        title="Which way the camera is facing (compass bearing); the red tip points north. Click to turn the view to face the pole: north, or south at a southern latitude."
+        aria-label="Which way the camera is facing (compass bearing); the red tip points north. Click to turn the view to face the pole: north, or south at a southern latitude.">
   <span class="heading-dial" aria-hidden="true"><span class="heading-needle"></span></span>
   <span class="heading-value"></span>
 </button>
@@ -103,6 +103,10 @@
     setCamera: a => m.setCamera(viewer, a.view),
     setModelColor: a => m.setModelColor(viewer, a.hex),
     setBackground: a => m.setBackground(viewer, a.background),
+    // How long the model may glide to a new pose: the host sends it again when the panel is shown, in case NINA's polling interval changed.
+    setMaxGlide: a => m.setMaxGlide(viewer, a.ms),
+    // The bearing the compass readout turns the view to when clicked: north, or south for a southern latitude.
+    setFaceBearing: a => m.setFaceBearing(viewer, a.bearing),
     setGrid: a => m.setGrid(viewer, a.visible),
     setCardinals: a => m.setCardinals(viewer, a.visible),
     // The page's colours are CSS variables on <html>; the viewer reads them and repaints on gsthemechange.

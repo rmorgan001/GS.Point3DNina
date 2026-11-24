@@ -29,6 +29,9 @@ namespace GS.Point3DNina.Test {
             Assert.Multiple(() => {
                 Assert.That(script, Does.Contain("options.maxGlideMs"), "read from the create options");
                 Assert.That(script, Does.Contain("Math.min(sincePrevious, this.maxGlideMs)"), "used for each glide");
+                Assert.That(script, Does.Contain("export function setMaxGlide"), "can change while the viewer runs");
+                Assert.That(File.ReadAllText(Path.Combine(Path.GetDirectoryName(typeof(Plugin).Assembly.Location)!, "Assets", "viewer.html")),
+                    Does.Contain("setMaxGlide:"), "the page passes it on");
                 Assert.That(script, Does.Not.Contain("Math.min(sincePrevious, MAX_GLIDE_MS)"), "no fixed cap left");
             });
         }

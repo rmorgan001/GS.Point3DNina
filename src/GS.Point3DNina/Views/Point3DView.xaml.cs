@@ -131,6 +131,8 @@ namespace GS.Point3DNina.Views {
             Send(new { cmd = "setCardinals", visible = vm.ShowCardinals });
             Send(new { cmd = "setCardinalSize", size = vm.CardinalSize.ToString().ToLowerInvariant() });
             Send(new { cmd = "setHeading", visible = vm.ShowHeading });
+            Send(new { cmd = "setMaxGlide", ms = vm.MaxGlideMs });
+            Send(new { cmd = "setFaceBearing", bearing = vm.FaceBearing });
             SendCoordinates();
             LoadModel();
             Send(new { cmd = "refresh" });
@@ -163,6 +165,7 @@ namespace GS.Point3DNina.Views {
                             heading = vm.ShowHeading,
                             coordinates = vm.ShowCoordinates,
                             maxGlideMs = vm.MaxGlideMs,
+                            faceBearing = vm.FaceBearing,
                             camera = vm.Options.Settings.Camera,
                             theme = vm.Theme.ToString().ToLowerInvariant(),
                             northern = vm.UseNorthCompass,
@@ -196,6 +199,7 @@ namespace GS.Point3DNina.Views {
             if (key == loadedModelKey) { SendPose(); return; }
             loadedModelKey = key;
             Send(new { cmd = "setHemisphere", northern = vm.UseNorthCompass });
+            Send(new { cmd = "setFaceBearing", bearing = vm.FaceBearing });
             Send(new { cmd = "loadModel", url = vm.ModelUrl, mount = vm.MountInfo });
         }
 
@@ -237,6 +241,7 @@ namespace GS.Point3DNina.Views {
                         Send(new { cmd = "setTheme", theme = vm.Theme.ToString().ToLowerInvariant() });
                         Send(new { cmd = "refresh" });
                         break;
+                    case ViewerChange.Timing: Send(new { cmd = "setMaxGlide", ms = vm.MaxGlideMs }); break;
                     case ViewerChange.Heading: Send(new { cmd = "setHeading", visible = vm.ShowHeading }); break;
                     case ViewerChange.Cardinals:
                         Send(new { cmd = "setCardinals", visible = vm.ShowCardinals });

@@ -377,6 +377,10 @@ class TelescopeViewer {
         // How long one glide may last (options.maxGlideMs): the host sets it to span its own update interval.
         this.maxGlideMs = Number.isFinite(options.maxGlideMs) ? Math.max(MIN_GLIDE_MS, options.maxGlideMs) : MAX_GLIDE_MS;
 
+        // The bearing a click on the compass readout turns the view to (options.faceBearing): 0 = north. A host in the
+        // southern hemisphere sets 180, to face the south pole its mount's polar axis points to.
+        this.faceBearing = Number.isFinite(options.faceBearing) ? options.faceBearing : 0;
+
         // A panel over one edge of the scene (the coordinates grid): the model is moved away from it, into
         // the space beside it, by shifting the camera's picture (not the camera), so a saved view is unchanged.
         this.insetElement = null;
@@ -528,8 +532,8 @@ class TelescopeViewer {
      * distance and target stay. It swings the short way round, unless the viewer prefers reduced motion.
      */
     faceNorth() {
-        const north = directionOf(0, this.northern);
-        // The camera faces (-cos alpha, -sin alpha); make that north.
+        const north = directionOf(this.faceBearing, this.northern);
+        // The camera faces (-cos alpha, -sin alpha); make that the bearing to face.
         const target = Math.atan2(-north.z, -north.x);
         const from = this.camera.alpha;
         const delta = rad(angleDelta(deg(from), deg(target)));
@@ -2348,6 +2352,14 @@ export function setBackground(viewer, url) {
 
 export function setGrid(viewer, visible) {
     viewer.setGrid(visible);
+}
+
+export function setMaxGlide(viewer, ms) {
+    if (Number.isFinite(ms)) viewer.maxGlideMs = Math.max(MIN_GLIDE_MS, ms);
+}
+
+export function setFaceBearing(viewer, bearing) {
+    if (Number.isFinite(bearing)) viewer.faceBearing = bearing;
 }
 
 export function setCardinals(viewer, visible) {
