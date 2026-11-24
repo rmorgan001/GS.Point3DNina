@@ -117,6 +117,10 @@ namespace GS.Point3DNina {
             return Model3D.GetPose(mode, latitude, ax, ay, Settings.RaOffset, Settings.DecOffset);
         }
 
+        /// <summary>False when the mount reported no position (NaN or infinite), which can't be sent to the viewer.</summary>
+        public static bool IsUsablePose((double X, double Y, double Z, double YCentre) pose)
+            => double.IsFinite(pose.X) && double.IsFinite(pose.Y) && double.IsFinite(pose.Z) && double.IsFinite(pose.YCentre);
+
         // ===== What the viewer needs for the chosen options =====
 
         public bool ShowsAssembly => Settings.UseAssembly && Model3D.ShowsAssembly(Mode, Settings.Mount);

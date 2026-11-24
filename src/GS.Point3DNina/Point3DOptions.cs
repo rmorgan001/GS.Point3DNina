@@ -70,7 +70,7 @@ namespace GS.Point3DNina {
         // ===== The options =====
 
         public ModeChoice SelectedMode {
-            get => Settings.UseAssembly ? GermanOnly[0] : AllModes.First(c => c.Mode == Settings.ModeOverride);
+            get => Settings.UseAssembly ? GermanOnly[0] : AllModes.FirstOrDefault(c => c.Mode == Settings.ModeOverride) ?? AllModes[0];
             set {
                 if (value == null || Settings.UseAssembly) return; // cleared while the list is rebuilt; or fixed to German polar
                 Settings.ModeOverride = value.Mode;

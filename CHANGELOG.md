@@ -7,6 +7,12 @@
 - The README now explains the model's lag behind the mount (the polling interval) and that the assembled model is German equatorial only.
 - Line endings are now consistent (`.gitattributes`, `.editorconfig`).
 - Settings saving and loading is now covered by tests.
+- A mount that reports no position (NaN) no longer causes an error; the model stays where it was.
+- Showing the panel again while the viewer is still starting no longer starts it twice.
+- Options changed while the viewer was starting are no longer lost.
+- Settings: a number that names no option is ignored, and the file is written safely (no half-written file after a crash).
+- The viewer is freed when the plugin shuts down, cannot navigate away from its own page, and no longer redraws unchanged coordinates.
+- Removed the unused `OptionsOpen` setting and `recentre` command.
 - The build and release workflows now use GitHub Actions versions that run on Node.js 24 (the Node.js 20 deprecation warning is gone).
 
 ## 1.0.5.0

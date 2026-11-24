@@ -39,7 +39,6 @@ public sealed class ViewerSettings
     public CardinalSize CardinalSize { get; set; } = CardinalSize.Medium;
     public int RaOffset { get; set; }
     public int DecOffset { get; set; }
-    public bool OptionsOpen { get; set; } = true;
     /// <summary>The camera the user saved (angle, tilt, zoom, what it looks at); null for the default view.</summary>
     public CameraView? Camera { get; set; }
 
@@ -86,6 +85,8 @@ public sealed class ViewerSettings
                     object? value = property.PropertyType == typeof(AssemblySupport)
                         ? Model3D.ParseAssemblySupport(match.Value.ValueKind == JsonValueKind.String ? match.Value.GetString() : null)
                         : match.Value.Deserialize(property.PropertyType, Json);
+                    var enumType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    if (value != null && enumType.IsEnum && !Enum.IsDefined(enumType, value)) continue; // a number that names no member
                     if (value != null || !property.PropertyType.IsValueType)
                         property.SetValue(settings, value);
                 }
@@ -102,7 +103,10 @@ public sealed class ViewerSettings
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            File.WriteAllText(path, JsonSerializer.Serialize(this, Json));
+            // Write beside the file and swap it in, so a crash part-way never leaves a half-written settings file.
+            var temp = path + ".tmp";
+            File.WriteAllText(temp, JsonSerializer.Serialize(this, Json));
+            File.Move(temp, path, true);
         }
         catch { /* the options are a convenience: never break the panel over them */ }
     }

@@ -22,6 +22,8 @@ namespace GS.Point3DNina.Views {
         private Point3DDockable vm;
         private bool created;    // the scene exists, so commands can follow
         private bool retired;    // a newer view has replaced this one and its WebView has been freed
+        private bool starting;   // the WebView is being set up (the panel may be shown again meanwhile)
+        private string lastCoordinates; // what the chips last showed, so an unchanged poll sends nothing
         private string loadedModelKey;
 
         public Point3DView() {
@@ -45,6 +47,8 @@ namespace GS.Point3DNina.Views {
                 if (created) SendAll();
                 return;
             }
+            if (starting) return;
+            starting = true;
             try {
                 var data = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "NINA", "Plugins", "GS.Point3DNina", "WebView2");
@@ -58,12 +62,27 @@ namespace GS.Point3DNina.Views {
                 Web.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
                 Web.CoreWebView2.Settings.AreDevToolsEnabled = false;
                 Web.CoreWebView2.WebMessageReceived += OnMessage;
+                // The viewer is the only page this panel shows: refuse to go anywhere else or open windows.
+                Web.CoreWebView2.NavigationStarting += (_, args) => {
+                    if (!args.Uri.StartsWith($"https://{Host}/", StringComparison.OrdinalIgnoreCase)) args.Cancel = true;
+                };
+                Web.CoreWebView2.NewWindowRequested += (_, args) => args.Handled = true;
                 Web.CoreWebView2.Navigate($"https://{Host}/viewer.html");
             } catch (Exception ex) {
                 // Freeing a replaced view aborts its start (E_ABORT): expected, and the newer view carries on.
                 if (retired) return;
                 NINA.Core.Utility.Logger.Error($"GS.Point3DNina: the 3D viewer could not start: {ex.Message}");
+            } finally {
+                starting = false;
             }
+        }
+
+        /// <summary>Frees the viewer when the plugin is torn down.</summary>
+        internal static void Shutdown() {
+            var view = active;
+            if (view == null) return;
+            active = null;
+            view.Dispatcher.Invoke(view.Retire);
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs e) {
@@ -85,6 +104,7 @@ namespace GS.Point3DNina.Views {
             Detach();
             created = false;
             loadedModelKey = null;
+            lastCoordinates = null;
             try {
                 if (Web.CoreWebView2 != null) Web.CoreWebView2.WebMessageReceived -= OnMessage;
                 Web.Dispose();
@@ -97,7 +117,7 @@ namespace GS.Point3DNina.Views {
             if (Web.CoreWebView2 == null) return;
             try {
                 Web.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message, Json));
-            } catch (Exception ex) when (ex is ObjectDisposedException or InvalidOperationException or System.Runtime.InteropServices.COMException) {
+            } catch (Exception ex) when (ex is ObjectDisposedException or InvalidOperationException or ArgumentException or System.Runtime.InteropServices.COMException) {
                 NINA.Core.Utility.Logger.Warning($"GS.Point3DNina: a message to the 3D viewer was not delivered: {ex.Message}");
             }
         }
@@ -131,6 +151,7 @@ namespace GS.Point3DNina.Views {
                 case "ready":
                     created = false;
                     loadedModelKey = null;
+                    lastCoordinates = null;
                     Send(new {
                         cmd = "create",
                         options = new {
@@ -151,8 +172,7 @@ namespace GS.Point3DNina.Views {
                     break;
                 case "created":
                     created = true;
-                    SendCoordinates();
-                    LoadModel();
+                    SendAll(); // options changed while the scene was being built
                     break;
                 case "modelLoaded":
                     SendPose();
@@ -186,12 +206,18 @@ namespace GS.Point3DNina.Views {
 
         private void SendCoordinates() {
             if (!created) return;
-            Send(new { cmd = "setCoordinates", visible = vm.ShowCoordinates, items = vm.CoordinateItems() });
+            var message = new { cmd = "setCoordinates", visible = vm.ShowCoordinates, items = vm.CoordinateItems() };
+            var text = JsonSerializer.Serialize(message, Json);
+            if (text == lastCoordinates) return;
+            lastCoordinates = text;
+            Send(message);
         }
 
         private void SendPose() {
             if (!created) return;
-            var (x, y, z, yCentre) = vm.CurrentPose();
+            var pose = vm.CurrentPose();
+            if (!Point3DDockable.IsUsablePose(pose)) return; // the mount reported no position: the model stays where it was
+            var (x, y, z, yCentre) = pose;
             Send(new { cmd = "setPose", x, y, z, yCentre });
         }
 

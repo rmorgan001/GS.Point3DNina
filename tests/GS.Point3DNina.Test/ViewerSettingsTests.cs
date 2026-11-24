@@ -17,6 +17,30 @@ namespace GS.Point3DNina.Test {
         }
 
         [Test]
+        public void ANumberThatNamesNoEnumMemberKeepsTheDefault() {
+            var s = ViewerSettings.Parse("{\"Theme\":7,\"ModeOverride\":99,\"ShowGrid\":false}");
+            Assert.Multiple(() => {
+                Assert.That(s.Theme, Is.EqualTo(ViewerTheme.Dark));
+                Assert.That(s.ModeOverride, Is.Null);
+                Assert.That(s.ShowGrid, Is.False);
+            });
+        }
+
+        [Test]
+        public void SavingLeavesNoTemporaryFileBehind() {
+            var dir = Path.Combine(Path.GetTempPath(), "gs-point3d-test-" + Guid.NewGuid().ToString("N"));
+            try {
+                var file = Path.Combine(dir, "settings.json");
+                new ViewerSettings().Save(file);
+                new ViewerSettings { ShowGrid = false }.Save(file);
+                Assert.That(Directory.GetFiles(dir), Is.EqualTo(new[] { file }));
+                Assert.That(ViewerSettings.Load(file).ShowGrid, Is.False);
+            } finally {
+                if (Directory.Exists(dir)) Directory.Delete(dir, true);
+            }
+        }
+
+        [Test]
         public void EarlierSupportNamesAreStillUnderstood()
             => Assert.That(ViewerSettings.Parse("{\"Support\":\"Pier6\"}").Support, Is.EqualTo(AssemblySupport.SmallPier));
 
